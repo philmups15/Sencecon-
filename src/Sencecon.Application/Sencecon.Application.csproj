@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Sencecon.Application</RootNamespace>
@@ -12,7 +12,7 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <!-- Pinned to 12.x: MediatR 13+ requires a paid commercial license above $5M revenue (RPL-1.5). -->
     <PackageReference Include="MediatR" Version="12.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.18" />
   </ItemGroup>
 
   <ItemGroup>

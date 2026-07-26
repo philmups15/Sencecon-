@@ -11,4 +11,5 @@ public class User : BaseAuditableEntity
     public UserRole Role { get; set; } = UserRole.User;
 
     public ICollection<TodoItem> TodoItems { get; set; } = new List<TodoItem>();
+    public ICollection<AuditLogEntry> AuditLogEntries { get; set; } = new List<AuditLogEntry>();
 }
