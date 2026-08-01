@@ -22,26 +22,44 @@ public class GetOpportunityByIdQueryHandler : IRequestHandler<GetOpportunityById
 
     public async Task<OpportunityDto> Handle(GetOpportunityByIdQuery request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Opportunities
-            .FirstOrDefaultAsync(o => o.Id == request.Id, cancellationToken);
+        var dto = await _context.Opportunities
+            .Where(o => o.Id == request.Id)
+            .Select(o => new OpportunityDto
+            {
+                Id = o.Id,
+                Code = o.Code,
+                Customer = o.Customer,
+                Capacity = o.Capacity,
+                Stage = o.Stage,
+                Location = o.Location,
+                NextAction = o.NextAction,
+                Owner = o.Owner,
+                Value = o.Value,
+                Notes = o.Notes,
+                CreatedBy = o.CreatedBy,
+                CreatedByName = _context.Users.Where(u => u.Id == o.CreatedBy).Select(u => u.DisplayName).FirstOrDefault() ?? string.Empty,
+                Created = o.Created,
+                Attachments = o.Attachments
+                    .OrderByDescending(a => a.Created)
+                    .Select(a => new OpportunityAttachmentDto
+                    {
+                        Id = a.Id,
+                        FileName = a.FileName,
+                        ContentType = a.ContentType,
+                        SizeBytes = a.SizeBytes,
+                        UploadedBy = a.UploadedBy,
+                        UploadedByName = _context.Users.Where(u => u.Id == a.UploadedBy).Select(u => u.DisplayName).FirstOrDefault() ?? string.Empty,
+                        Created = a.Created
+                    })
+                    .ToList()
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
-        if (entity is null)
+        if (dto is null)
         {
             throw new NotFoundException(nameof(Domain.Entities.Opportunity), request.Id);
         }
 
-        return new OpportunityDto
-        {
-            Id = entity.Id,
-            Code = entity.Code,
-            Customer = entity.Customer,
-            Capacity = entity.Capacity,
-            Stage = entity.Stage,
-            Location = entity.Location,
-            NextAction = entity.NextAction,
-            Owner = entity.Owner,
-            Value = entity.Value,
-            Created = entity.Created
-        };
+        return dto;
     }
 }

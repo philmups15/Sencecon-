@@ -11,6 +11,7 @@ public interface IApplicationDbContext
     DbSet<WorkOrder> WorkOrders { get; }
     DbSet<Project> Projects { get; }
     DbSet<Opportunity> Opportunities { get; }
+    DbSet<OpportunityAttachment> OpportunityAttachments { get; }
     DbSet<Survey> Surveys { get; }
     DbSet<Design> Designs { get; }
     DbSet<BomItem> BomItems { get; }

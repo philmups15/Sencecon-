@@ -30,7 +30,23 @@ public class GetOpportunitiesQueryHandler : IRequestHandler<GetOpportunitiesQuer
                 NextAction = o.NextAction,
                 Owner = o.Owner,
                 Value = o.Value,
-                Created = o.Created
+                Notes = o.Notes,
+                CreatedBy = o.CreatedBy,
+                CreatedByName = _context.Users.Where(u => u.Id == o.CreatedBy).Select(u => u.DisplayName).FirstOrDefault() ?? string.Empty,
+                Created = o.Created,
+                Attachments = o.Attachments
+                    .OrderByDescending(a => a.Created)
+                    .Select(a => new OpportunityAttachmentDto
+                    {
+                        Id = a.Id,
+                        FileName = a.FileName,
+                        ContentType = a.ContentType,
+                        SizeBytes = a.SizeBytes,
+                        UploadedBy = a.UploadedBy,
+                        UploadedByName = _context.Users.Where(u => u.Id == a.UploadedBy).Select(u => u.DisplayName).FirstOrDefault() ?? string.Empty,
+                        Created = a.Created
+                    })
+                    .ToList()
             })
             .ToListAsync(cancellationToken);
     }

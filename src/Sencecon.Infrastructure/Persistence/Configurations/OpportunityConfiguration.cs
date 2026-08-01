@@ -33,5 +33,13 @@ public class OpportunityConfiguration : IEntityTypeConfiguration<Opportunity>
 
         builder.Property(o => o.Value)
             .HasColumnType("numeric(18,2)");
+
+        builder.Property(o => o.Notes)
+            .HasMaxLength(2000);
+
+        builder.HasMany(o => o.Attachments)
+            .WithOne(a => a.Opportunity)
+            .HasForeignKey(a => a.OpportunityId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

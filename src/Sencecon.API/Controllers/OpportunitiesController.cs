@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Sencecon.Application.Opportunities.Commands.CreateOpportunity;
 using Sencecon.Application.Opportunities.Commands.DeleteOpportunity;
 using Sencecon.Application.Opportunities.Commands.UpdateOpportunity;
+using Sencecon.Application.Opportunities.Commands.UploadOpportunityAttachments;
 using Sencecon.Application.Opportunities.Queries.GetOpportunities;
+using Sencecon.Application.Opportunities.Queries.GetOpportunityAttachment;
 using Sencecon.Application.Opportunities.Queries.GetOpportunityById;
 using Sencecon.Domain.Enums;
 
@@ -44,14 +46,14 @@ public class OpportunitiesController : ControllerBase
     {
         var id = await _sender.Send(new CreateOpportunityCommand
         {
-            Code = request.Code,
             Customer = request.Customer,
             Capacity = request.Capacity,
             Stage = request.Stage,
             Location = request.Location,
             NextAction = request.NextAction,
             Owner = request.Owner,
-            Value = request.Value
+            Value = request.Value,
+            Notes = request.Notes
         });
 
         return CreatedAtAction(nameof(GetById), new { id }, id);
@@ -84,8 +86,43 @@ public class OpportunitiesController : ControllerBase
         await _sender.Send(new DeleteOpportunityCommand { Id = id });
         return NoContent();
     }
+
+    [HttpPost("{id:guid}/attachments")]
+    [RequestSizeLimit(60_000_000)]
+    [ProducesResponseType(typeof(IReadOnlyList<OpportunityAttachmentDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IReadOnlyList<OpportunityAttachmentDto>>> UploadAttachments(Guid id, [FromForm] IFormFileCollection files)
+    {
+        var attachmentFiles = new List<AttachmentFile>();
+        foreach (var file in files)
+        {
+            using var stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+            attachmentFiles.Add(new AttachmentFile
+            {
+                FileName = file.FileName,
+                ContentType = string.IsNullOrWhiteSpace(file.ContentType) ? "application/octet-stream" : file.ContentType,
+                Content = stream.ToArray()
+            });
+        }
+
+        var result = await _sender.Send(new UploadOpportunityAttachmentsCommand
+        {
+            OpportunityId = id,
+            Files = attachmentFiles
+        });
+
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/attachments/{attachmentId:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> DownloadAttachment(Guid id, Guid attachmentId)
+    {
+        var result = await _sender.Send(new GetOpportunityAttachmentQuery { OpportunityId = id, AttachmentId = attachmentId });
+        return File(result.Content, result.ContentType, result.FileName);
+    }
 }
 
-public record CreateOpportunityRequest(string Code, string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value);
+public record CreateOpportunityRequest(string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value, string? Notes);
 
 public record UpdateOpportunityRequest(string Code, string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value);

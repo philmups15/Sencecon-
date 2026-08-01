@@ -6,10 +6,6 @@ public class CreateOpportunityCommandValidator : AbstractValidator<CreateOpportu
 {
     public CreateOpportunityCommandValidator()
     {
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.Customer)
             .NotEmpty()
             .MaximumLength(200);
@@ -28,5 +24,8 @@ public class CreateOpportunityCommandValidator : AbstractValidator<CreateOpportu
 
         RuleFor(v => v.Value)
             .GreaterThanOrEqualTo(0);
+
+        RuleFor(v => v.Notes)
+            .MaximumLength(2000);
     }
 }
