@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sencecon.Application.Opportunities.Commands.CreateOpportunity;
 using Sencecon.Application.Opportunities.Commands.DeleteOpportunity;
 using Sencecon.Application.Opportunities.Commands.UpdateOpportunity;
+using Sencecon.Application.Opportunities.Commands.UpdateOpportunityStage;
 using Sencecon.Application.Opportunities.Queries.GetOpportunities;
 using Sencecon.Application.Opportunities.Queries.GetOpportunityById;
 using Sencecon.Domain.Enums;
@@ -77,6 +78,25 @@ public class OpportunitiesController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id:guid}/stage")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateStage(Guid id, UpdateOpportunityStageRequest request)
+    {
+        await _sender.Send(new UpdateOpportunityStageCommand
+        {
+            Id = id,
+            Stage = request.Stage,
+            NextAction = request.NextAction,
+            SiteVisitDate = request.SiteVisitDate,
+            SiteVisitNotes = request.SiteVisitNotes,
+            ProposalNotes = request.ProposalNotes,
+            NegotiationNotes = request.NegotiationNotes,
+            WonDate = request.WonDate
+        });
+
+        return NoContent();
+    }
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
@@ -89,3 +109,12 @@ public class OpportunitiesController : ControllerBase
 public record CreateOpportunityRequest(string Code, string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value);
 
 public record UpdateOpportunityRequest(string Code, string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value);
+
+public record UpdateOpportunityStageRequest(
+    OpportunityStage Stage,
+    string? NextAction = null,
+    DateTimeOffset? SiteVisitDate = null,
+    string? SiteVisitNotes = null,
+    string? ProposalNotes = null,
+    string? NegotiationNotes = null,
+    DateTimeOffset? WonDate = null);

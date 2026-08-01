@@ -41,6 +41,11 @@ public class GetOpportunityByIdQueryHandler : IRequestHandler<GetOpportunityById
             NextAction = entity.NextAction,
             Owner = entity.Owner,
             Value = entity.Value,
+            SiteVisitDate = entity.SiteVisitDate,
+            SiteVisitNotes = entity.SiteVisitNotes,
+            ProposalNotes = entity.ProposalNotes,
+            NegotiationNotes = entity.NegotiationNotes,
+            WonDate = entity.WonDate,
             Created = entity.Created
         };
     }

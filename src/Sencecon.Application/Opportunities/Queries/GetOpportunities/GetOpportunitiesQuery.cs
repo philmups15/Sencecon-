@@ -30,6 +30,11 @@ public class GetOpportunitiesQueryHandler : IRequestHandler<GetOpportunitiesQuer
                 NextAction = o.NextAction,
                 Owner = o.Owner,
                 Value = o.Value,
+                SiteVisitDate = o.SiteVisitDate,
+                SiteVisitNotes = o.SiteVisitNotes,
+                ProposalNotes = o.ProposalNotes,
+                NegotiationNotes = o.NegotiationNotes,
+                WonDate = o.WonDate,
                 Created = o.Created
             })
             .ToListAsync(cancellationToken);

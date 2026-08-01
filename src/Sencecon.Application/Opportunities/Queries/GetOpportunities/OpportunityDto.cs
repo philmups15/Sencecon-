@@ -13,5 +13,10 @@ public record OpportunityDto
     public string NextAction { get; init; } = string.Empty;
     public string Owner { get; init; } = string.Empty;
     public decimal Value { get; init; }
+    public DateTimeOffset? SiteVisitDate { get; init; }
+    public string? SiteVisitNotes { get; init; }
+    public string? ProposalNotes { get; init; }
+    public string? NegotiationNotes { get; init; }
+    public DateTimeOffset? WonDate { get; init; }
     public DateTimeOffset Created { get; init; }
 }

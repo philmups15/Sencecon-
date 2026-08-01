@@ -33,5 +33,14 @@ public class OpportunityConfiguration : IEntityTypeConfiguration<Opportunity>
 
         builder.Property(o => o.Value)
             .HasColumnType("numeric(18,2)");
+
+        builder.Property(o => o.SiteVisitNotes)
+            .HasMaxLength(1000);
+
+        builder.Property(o => o.ProposalNotes)
+            .HasMaxLength(1000);
+
+        builder.Property(o => o.NegotiationNotes)
+            .HasMaxLength(1000);
     }
 }
