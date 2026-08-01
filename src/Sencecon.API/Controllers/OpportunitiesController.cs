@@ -73,7 +73,8 @@ public class OpportunitiesController : ControllerBase
             Location = request.Location,
             NextAction = request.NextAction,
             Owner = request.Owner,
-            Value = request.Value
+            Value = request.Value,
+            Notes = request.Notes
         });
 
         return NoContent();
@@ -125,4 +126,4 @@ public class OpportunitiesController : ControllerBase
 
 public record CreateOpportunityRequest(string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value, string? Notes);
 
-public record UpdateOpportunityRequest(string Code, string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value);
+public record UpdateOpportunityRequest(string Code, string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value, string? Notes);

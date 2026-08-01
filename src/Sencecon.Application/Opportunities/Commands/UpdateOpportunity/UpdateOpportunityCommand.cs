@@ -17,6 +17,7 @@ public record UpdateOpportunityCommand : IRequest
     public string NextAction { get; init; } = string.Empty;
     public string Owner { get; init; } = string.Empty;
     public decimal Value { get; init; }
+    public string? Notes { get; init; }
 }
 
 public class UpdateOpportunityCommandHandler : IRequestHandler<UpdateOpportunityCommand>
@@ -46,6 +47,7 @@ public class UpdateOpportunityCommandHandler : IRequestHandler<UpdateOpportunity
         entity.NextAction = request.NextAction;
         entity.Owner = request.Owner;
         entity.Value = request.Value;
+        entity.Notes = request.Notes;
         entity.LastModified = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);

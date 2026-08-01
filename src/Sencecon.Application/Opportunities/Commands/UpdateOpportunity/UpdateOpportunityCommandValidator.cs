@@ -31,5 +31,8 @@ public class UpdateOpportunityCommandValidator : AbstractValidator<UpdateOpportu
 
         RuleFor(v => v.Value)
             .GreaterThanOrEqualTo(0);
+
+        RuleFor(v => v.Notes)
+            .MaximumLength(2000);
     }
 }
