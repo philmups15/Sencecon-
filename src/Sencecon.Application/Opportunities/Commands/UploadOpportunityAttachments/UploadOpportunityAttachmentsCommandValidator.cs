@@ -15,6 +15,9 @@ public class UploadOpportunityAttachmentsCommandValidator : AbstractValidator<Up
             .Must(files => files.Count <= MaxFiles)
             .WithMessage($"No more than {MaxFiles} files can be uploaded at once.");
 
+        RuleFor(v => v.Title)
+            .MaximumLength(200);
+
         RuleForEach(v => v.Files).ChildRules(file =>
         {
             file.RuleFor(f => f.FileName)

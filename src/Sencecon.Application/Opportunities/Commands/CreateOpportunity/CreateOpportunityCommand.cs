@@ -15,7 +15,6 @@ public record CreateOpportunityCommand : IRequest<Guid>
     public string NextAction { get; init; } = string.Empty;
     public string Owner { get; init; } = string.Empty;
     public decimal Value { get; init; }
-    public string? Notes { get; init; }
 }
 
 public class CreateOpportunityCommandHandler : IRequestHandler<CreateOpportunityCommand, Guid>
@@ -46,12 +45,14 @@ public class CreateOpportunityCommandHandler : IRequestHandler<CreateOpportunity
             NextAction = request.NextAction,
             Owner = request.Owner,
             Value = request.Value,
-            Notes = request.Notes,
             CreatedBy = currentUserId,
-            Created = DateTimeOffset.UtcNow
+            Created = DateTimeOffset.UtcNow,
+            StageData = new() { [request.Stage.ToString()] = new() }
         };
 
         _context.Opportunities.Add(entity);
+
+        OpportunityActivityLogger.Log(_context, entity.Id, "created", "Created opportunity", currentUserId);
 
         await _context.SaveChangesAsync(cancellationToken);
 

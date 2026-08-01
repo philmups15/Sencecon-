@@ -17,16 +17,17 @@ public record UpdateOpportunityCommand : IRequest
     public string NextAction { get; init; } = string.Empty;
     public string Owner { get; init; } = string.Empty;
     public decimal Value { get; init; }
-    public string? Notes { get; init; }
 }
 
 public class UpdateOpportunityCommandHandler : IRequestHandler<UpdateOpportunityCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUserService _currentUserService;
 
-    public UpdateOpportunityCommandHandler(IApplicationDbContext context)
+    public UpdateOpportunityCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
     {
         _context = context;
+        _currentUserService = currentUserService;
     }
 
     public async Task Handle(UpdateOpportunityCommand request, CancellationToken cancellationToken)
@@ -39,6 +40,24 @@ public class UpdateOpportunityCommandHandler : IRequestHandler<UpdateOpportunity
             throw new NotFoundException(nameof(Domain.Entities.Opportunity), request.Id);
         }
 
+        var currentUserId = _currentUserService.UserId;
+
+        LogFieldChange(entity.Id, "Customer", entity.Customer, request.Customer, currentUserId);
+        LogFieldChange(entity.Id, "Capacity", entity.Capacity, request.Capacity, currentUserId);
+        LogFieldChange(entity.Id, "Location", entity.Location, request.Location, currentUserId);
+        LogFieldChange(entity.Id, "Owner", entity.Owner, request.Owner, currentUserId);
+        LogFieldChange(entity.Id, "Next action", entity.NextAction, request.NextAction, currentUserId);
+
+        if (entity.Value != request.Value)
+        {
+            OpportunityActivityLogger.Log(
+                _context,
+                entity.Id,
+                "edit",
+                $"Value changed from {OpportunityActivityLogger.FormatMoney(entity.Value)} to {OpportunityActivityLogger.FormatMoney(request.Value)}",
+                currentUserId);
+        }
+
         entity.Code = request.Code;
         entity.Customer = request.Customer;
         entity.Capacity = request.Capacity;
@@ -47,9 +66,23 @@ public class UpdateOpportunityCommandHandler : IRequestHandler<UpdateOpportunity
         entity.NextAction = request.NextAction;
         entity.Owner = request.Owner;
         entity.Value = request.Value;
-        entity.Notes = request.Notes;
         entity.LastModified = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    private void LogFieldChange(Guid opportunityId, string label, string oldValue, string newValue, Guid? userId)
+    {
+        if (oldValue == newValue)
+        {
+            return;
+        }
+
+        OpportunityActivityLogger.Log(
+            _context,
+            opportunityId,
+            "edit",
+            $"{label} changed from \"{(string.IsNullOrEmpty(oldValue) ? "—" : oldValue)}\" to \"{(string.IsNullOrEmpty(newValue) ? "—" : newValue)}\"",
+            userId);
     }
 }

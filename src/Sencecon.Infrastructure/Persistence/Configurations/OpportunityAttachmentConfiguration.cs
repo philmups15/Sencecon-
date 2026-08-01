@@ -8,6 +8,10 @@ public class OpportunityAttachmentConfiguration : IEntityTypeConfiguration<Oppor
 {
     public void Configure(EntityTypeBuilder<OpportunityAttachment> builder)
     {
+        builder.Property(a => a.Title)
+            .IsRequired()
+            .HasMaxLength(200);
+
         builder.Property(a => a.FileName)
             .IsRequired()
             .HasMaxLength(260);

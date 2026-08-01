@@ -1,9 +1,13 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.Application.Opportunities.Commands.AddOpportunityNote;
+using Sencecon.Application.Opportunities.Commands.ChangeOpportunityStage;
+using Sencecon.Application.Opportunities.Commands.ConvertOpportunityToProject;
 using Sencecon.Application.Opportunities.Commands.CreateOpportunity;
 using Sencecon.Application.Opportunities.Commands.DeleteOpportunity;
 using Sencecon.Application.Opportunities.Commands.UpdateOpportunity;
+using Sencecon.Application.Opportunities.Commands.UpdateOpportunityStageData;
 using Sencecon.Application.Opportunities.Commands.UploadOpportunityAttachments;
 using Sencecon.Application.Opportunities.Queries.GetOpportunities;
 using Sencecon.Application.Opportunities.Queries.GetOpportunityAttachment;
@@ -52,8 +56,7 @@ public class OpportunitiesController : ControllerBase
             Location = request.Location,
             NextAction = request.NextAction,
             Owner = request.Owner,
-            Value = request.Value,
-            Notes = request.Notes
+            Value = request.Value
         });
 
         return CreatedAtAction(nameof(GetById), new { id }, id);
@@ -73,8 +76,7 @@ public class OpportunitiesController : ControllerBase
             Location = request.Location,
             NextAction = request.NextAction,
             Owner = request.Owner,
-            Value = request.Value,
-            Notes = request.Notes
+            Value = request.Value
         });
 
         return NoContent();
@@ -88,10 +90,58 @@ public class OpportunitiesController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id:guid}/stage")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ChangeStage(Guid id, ChangeStageRequest request)
+    {
+        await _sender.Send(new ChangeOpportunityStageCommand
+        {
+            OpportunityId = id,
+            Stage = request.Stage,
+            Note = request.Note
+        });
+
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}/stage-data")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateStageData(Guid id, UpdateStageDataRequest request)
+    {
+        await _sender.Send(new UpdateOpportunityStageDataCommand
+        {
+            OpportunityId = id,
+            Fields = request.Fields
+        });
+
+        return NoContent();
+    }
+
+    [HttpPost("{id:guid}/notes")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    public async Task<ActionResult<Guid>> AddNote(Guid id, AddNoteRequest request)
+    {
+        var noteId = await _sender.Send(new AddOpportunityNoteCommand
+        {
+            OpportunityId = id,
+            Text = request.Text
+        });
+
+        return CreatedAtAction(nameof(GetById), new { id }, noteId);
+    }
+
+    [HttpPost("{id:guid}/convert")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Convert(Guid id)
+    {
+        await _sender.Send(new ConvertOpportunityToProjectCommand { OpportunityId = id });
+        return NoContent();
+    }
+
     [HttpPost("{id:guid}/attachments")]
     [RequestSizeLimit(60_000_000)]
     [ProducesResponseType(typeof(IReadOnlyList<OpportunityAttachmentDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IReadOnlyList<OpportunityAttachmentDto>>> UploadAttachments(Guid id, [FromForm] IFormFileCollection files)
+    public async Task<ActionResult<IReadOnlyList<OpportunityAttachmentDto>>> UploadAttachments(Guid id, [FromForm] IFormFileCollection files, [FromForm] string? title)
     {
         var attachmentFiles = new List<AttachmentFile>();
         foreach (var file in files)
@@ -109,7 +159,8 @@ public class OpportunitiesController : ControllerBase
         var result = await _sender.Send(new UploadOpportunityAttachmentsCommand
         {
             OpportunityId = id,
-            Files = attachmentFiles
+            Files = attachmentFiles,
+            Title = title
         });
 
         return Ok(result);
@@ -124,6 +175,12 @@ public class OpportunitiesController : ControllerBase
     }
 }
 
-public record CreateOpportunityRequest(string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value, string? Notes);
+public record CreateOpportunityRequest(string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value);
 
-public record UpdateOpportunityRequest(string Code, string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value, string? Notes);
+public record UpdateOpportunityRequest(string Code, string Customer, string Capacity, OpportunityStage Stage, string Location, string NextAction, string Owner, decimal Value);
+
+public record ChangeStageRequest(OpportunityStage Stage, string? Note);
+
+public record UpdateStageDataRequest(Dictionary<string, string> Fields);
+
+public record AddNoteRequest(string Text);

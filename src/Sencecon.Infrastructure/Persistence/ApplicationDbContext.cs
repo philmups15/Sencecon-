@@ -18,6 +18,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Opportunity> Opportunities => Set<Opportunity>();
     public DbSet<OpportunityAttachment> OpportunityAttachments => Set<OpportunityAttachment>();
+    public DbSet<OpportunityNote> OpportunityNotes => Set<OpportunityNote>();
+    public DbSet<OpportunityActivity> OpportunityActivities => Set<OpportunityActivity>();
     public DbSet<Survey> Surveys => Set<Survey>();
     public DbSet<Design> Designs => Set<Design>();
     public DbSet<BomItem> BomItems => Set<BomItem>();

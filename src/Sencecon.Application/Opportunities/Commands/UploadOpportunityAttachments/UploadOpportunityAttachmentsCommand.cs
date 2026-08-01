@@ -18,6 +18,7 @@ public record UploadOpportunityAttachmentsCommand : IRequest<IReadOnlyList<Oppor
 {
     public required Guid OpportunityId { get; init; }
     public required IReadOnlyList<AttachmentFile> Files { get; init; }
+    public string? Title { get; init; }
 }
 
 public class UploadOpportunityAttachmentsCommandHandler : IRequestHandler<UploadOpportunityAttachmentsCommand, IReadOnlyList<OpportunityAttachmentDto>>
@@ -49,10 +50,20 @@ public class UploadOpportunityAttachmentsCommandHandler : IRequestHandler<Upload
             .Select(u => u.DisplayName)
             .FirstOrDefaultAsync(cancellationToken) ?? string.Empty;
 
+        var title = string.IsNullOrWhiteSpace(request.Title)
+            ? System.IO.Path.GetFileNameWithoutExtension(request.Files[0].FileName)
+            : request.Title.Trim();
+
+        var existingVersionCount = await _context.OpportunityAttachments
+            .Where(a => a.OpportunityId == request.OpportunityId && a.Title == title)
+            .CountAsync(cancellationToken);
+
         var now = DateTimeOffset.UtcNow;
-        var entities = request.Files.Select(file => new OpportunityAttachment
+        var entities = request.Files.Select((file, index) => new OpportunityAttachment
         {
             OpportunityId = request.OpportunityId,
+            Title = title,
+            Version = existingVersionCount + index + 1,
             FileName = file.FileName,
             ContentType = file.ContentType,
             SizeBytes = file.Content.LongLength,
@@ -64,6 +75,7 @@ public class UploadOpportunityAttachmentsCommandHandler : IRequestHandler<Upload
         foreach (var entity in entities)
         {
             _context.OpportunityAttachments.Add(entity);
+            OpportunityActivityLogger.Log(_context, request.OpportunityId, "document", $"Uploaded {title} v{entity.Version}", currentUserId);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
@@ -71,6 +83,8 @@ public class UploadOpportunityAttachmentsCommandHandler : IRequestHandler<Upload
         return entities.Select(a => new OpportunityAttachmentDto
         {
             Id = a.Id,
+            Title = a.Title,
+            Version = a.Version,
             FileName = a.FileName,
             ContentType = a.ContentType,
             SizeBytes = a.SizeBytes,
