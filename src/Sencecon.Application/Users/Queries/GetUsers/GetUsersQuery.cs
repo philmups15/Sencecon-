@@ -25,6 +25,7 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, IReadOnlyList
                 Email = u.Email,
                 DisplayName = u.DisplayName,
                 Role = u.Role,
+                IsActive = u.IsActive,
                 Created = u.Created
             })
             .ToListAsync(cancellationToken);

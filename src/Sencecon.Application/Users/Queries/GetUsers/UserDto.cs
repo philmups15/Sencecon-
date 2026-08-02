@@ -8,5 +8,6 @@ public record UserDto
     public string Email { get; init; } = string.Empty;
     public string DisplayName { get; init; } = string.Empty;
     public UserRole Role { get; init; }
+    public bool IsActive { get; init; }
     public DateTimeOffset Created { get; init; }
 }

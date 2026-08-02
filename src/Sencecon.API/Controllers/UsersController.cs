@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sencecon.API.Authorization;
 using Sencecon.Application.Common.Interfaces;
+using Sencecon.Application.Users.Commands.AdminSetPassword;
 using Sencecon.Application.Users.Commands.ChangePassword;
+using Sencecon.Application.Users.Commands.SendPasswordReset;
+using Sencecon.Application.Users.Commands.SetUserStatus;
 using Sencecon.Application.Users.Commands.UpdateProfile;
 using Sencecon.Application.Users.Commands.UpdateUserRole;
 using Sencecon.Application.Users.Queries.GetCurrentUser;
@@ -87,6 +90,50 @@ public class UsersController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPut("{id:guid}/status")]
+    [Authorize(Roles = Roles.Admin)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<UserDto>> SetStatus(Guid id, SetUserStatusRequest request)
+    {
+        var result = await _sender.Send(new SetUserStatusCommand
+        {
+            UserId = id,
+            Enabled = request.Enabled,
+            RequestingUserId = CurrentUserId
+        });
+
+        return Ok(result);
+    }
+
+    [HttpPut("{id:guid}/password")]
+    [Authorize(Roles = Roles.Admin)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> AdminSetPassword(Guid id, AdminSetPasswordRequest request)
+    {
+        await _sender.Send(new AdminSetPasswordCommand
+        {
+            UserId = id,
+            NewPassword = request.NewPassword,
+            RequestingUserId = CurrentUserId
+        });
+
+        return NoContent();
+    }
+
+    [HttpPost("{id:guid}/password-reset")]
+    [Authorize(Roles = Roles.Admin)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> SendPasswordReset(Guid id)
+    {
+        await _sender.Send(new SendPasswordResetCommand
+        {
+            UserId = id,
+            RequestingUserId = CurrentUserId
+        });
+
+        return NoContent();
+    }
 }
 
 public record UpdateProfileRequest(string DisplayName);
@@ -94,3 +141,7 @@ public record UpdateProfileRequest(string DisplayName);
 public record ChangePasswordRequest(string CurrentPassword, string NewPassword);
 
 public record UpdateUserRoleRequest(UserRole Role);
+
+public record SetUserStatusRequest(bool Enabled);
+
+public record AdminSetPasswordRequest(string NewPassword);

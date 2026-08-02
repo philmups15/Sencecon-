@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Sencecon.Application.Common.Interfaces;
 using Sencecon.Domain.Entities;
 
 namespace Sencecon.Infrastructure.Persistence;
 
-public class ApplicationDbContext : DbContext, IApplicationDbContext
+// IDataProtectionKeyContext persists the Data Protection key ring to this same
+// database — Railway's containers are ephemeral across deploys, so without this
+// the keys used to encrypt IntegrationSetting secrets would be regenerated on
+// every deploy and everything previously encrypted would become unreadable.
+public class ApplicationDbContext : DbContext, IApplicationDbContext, IDataProtectionKeyContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -26,6 +31,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<NonConformity> NonConformities => Set<NonConformity>();
     public DbSet<Report> Reports => Set<Report>();
     public DbSet<AuditLogEntry> AuditLogEntries => Set<AuditLogEntry>();
+    public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
+    public DbSet<IntegrationSetting> IntegrationSettings => Set<IntegrationSetting>();
+
+    public DbSet<Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey> DataProtectionKeys => Set<Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

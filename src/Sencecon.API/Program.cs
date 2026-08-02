@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,6 +42,34 @@ builder.Services
             ValidIssuer = jwtSection["Issuer"],
             ValidAudience = jwtSection["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+        };
+
+        // JWTs are otherwise stateless and stay valid until they expire, so a disabled
+        // user's existing token would keep working for up to Jwt:ExpiryMinutes without
+        // this check. Costs one DB read per authenticated request in exchange for
+        // "disable user" actually taking effect immediately.
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var subClaim = context.Principal?.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                if (subClaim is null || !Guid.TryParse(subClaim, out var userId))
+                {
+                    context.Fail("Token is missing a valid subject claim.");
+                    return;
+                }
+
+                var db = context.HttpContext.RequestServices.GetRequiredService<ApplicationDbContext>();
+                var isActive = await db.Users
+                    .Where(u => u.Id == userId)
+                    .Select(u => (bool?)u.IsActive)
+                    .FirstOrDefaultAsync();
+
+                if (isActive != true)
+                {
+                    context.Fail("This account has been disabled.");
+                }
+            }
         };
     });
 

@@ -49,6 +49,7 @@ public class UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserRoleComman
             Email = entity.Email,
             DisplayName = entity.DisplayName,
             Role = entity.Role,
+            IsActive = entity.IsActive,
             Created = entity.Created
         };
     }

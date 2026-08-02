@@ -20,6 +20,8 @@ public interface IApplicationDbContext
     DbSet<NonConformity> NonConformities { get; }
     DbSet<Report> Reports { get; }
     DbSet<AuditLogEntry> AuditLogEntries { get; }
+    DbSet<PasswordResetToken> PasswordResetTokens { get; }
+    DbSet<IntegrationSetting> IntegrationSettings { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

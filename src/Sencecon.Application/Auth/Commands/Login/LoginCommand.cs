@@ -39,6 +39,11 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResult>
             throw new UnauthorizedAccessException("Invalid email or password.");
         }
 
+        if (!user.IsActive)
+        {
+            throw new UnauthorizedAccessException("This account has been disabled.");
+        }
+
         var token = _jwtTokenGenerator.GenerateToken(user);
 
         return new AuthResult
