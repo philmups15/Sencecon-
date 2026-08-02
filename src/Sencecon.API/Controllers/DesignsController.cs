@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.API.Authorization;
 using Sencecon.Application.Designs.Commands.CreateDesign;
 using Sencecon.Application.Designs.Commands.DeleteDesign;
 using Sencecon.Application.Designs.Commands.UpdateDesign;
@@ -23,6 +24,7 @@ public class DesignsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = ModuleAccess.DesignsRead)]
     [ProducesResponseType(typeof(IReadOnlyList<DesignDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<DesignDto>>> GetAll()
     {
@@ -31,6 +33,7 @@ public class DesignsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.DesignsRead)]
     [ProducesResponseType(typeof(DesignDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<DesignDto>> GetById(Guid id)
     {
@@ -39,6 +42,7 @@ public class DesignsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = ModuleAccess.DesignsWrite)]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> Create(CreateDesignRequest request)
     {
@@ -55,6 +59,7 @@ public class DesignsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.DesignsWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, UpdateDesignRequest request)
     {
@@ -72,6 +77,7 @@ public class DesignsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.DesignsWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {

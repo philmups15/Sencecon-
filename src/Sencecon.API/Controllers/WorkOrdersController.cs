@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.API.Authorization;
 using Sencecon.Application.WorkOrders.Commands.CreateWorkOrder;
 using Sencecon.Application.WorkOrders.Commands.DeleteWorkOrder;
 using Sencecon.Application.WorkOrders.Commands.UpdateWorkOrder;
@@ -23,6 +24,7 @@ public class WorkOrdersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = ModuleAccess.WorkOrdersRead)]
     [ProducesResponseType(typeof(IReadOnlyList<WorkOrderDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<WorkOrderDto>>> GetAll()
     {
@@ -31,6 +33,7 @@ public class WorkOrdersController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.WorkOrdersRead)]
     [ProducesResponseType(typeof(WorkOrderDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<WorkOrderDto>> GetById(Guid id)
     {
@@ -39,6 +42,7 @@ public class WorkOrdersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = ModuleAccess.WorkOrdersWrite)]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> Create(CreateWorkOrderRequest request)
     {
@@ -57,6 +61,7 @@ public class WorkOrdersController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.WorkOrdersWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, UpdateWorkOrderRequest request)
     {
@@ -76,6 +81,7 @@ public class WorkOrdersController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.WorkOrdersWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {

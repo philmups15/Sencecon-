@@ -1,13 +1,14 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.API.Authorization;
 using Sencecon.Application.AuditLog.Queries.GetAuditLog;
 
 namespace Sencecon.API.Controllers;
 
 [ApiController]
 [Route("api/auditlog")]
-[Authorize]
+[Authorize(Roles = Roles.Admin)]
 public class AuditLogController : ControllerBase
 {
     private readonly ISender _sender;

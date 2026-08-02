@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.API.Authorization;
 using Sencecon.Application.NonConformities.Commands.CreateNonConformity;
 using Sencecon.Application.NonConformities.Commands.DeleteNonConformity;
 using Sencecon.Application.NonConformities.Commands.UpdateNonConformity;
@@ -23,6 +24,7 @@ public class NonConformitiesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = ModuleAccess.NonConformitiesRead)]
     [ProducesResponseType(typeof(IReadOnlyList<NonConformityDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<NonConformityDto>>> GetAll()
     {
@@ -31,6 +33,7 @@ public class NonConformitiesController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.NonConformitiesRead)]
     [ProducesResponseType(typeof(NonConformityDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<NonConformityDto>> GetById(Guid id)
     {
@@ -39,6 +42,7 @@ public class NonConformitiesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = ModuleAccess.NonConformitiesWrite)]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> Create(CreateNonConformityRequest request)
     {
@@ -54,6 +58,7 @@ public class NonConformitiesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.NonConformitiesWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, UpdateNonConformityRequest request)
     {
@@ -70,6 +75,7 @@ public class NonConformitiesController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.NonConformitiesWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {

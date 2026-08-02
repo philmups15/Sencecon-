@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.API.Authorization;
 using Sencecon.Application.Plants.Commands.CreatePlant;
 using Sencecon.Application.Plants.Commands.DeletePlant;
 using Sencecon.Application.Plants.Commands.UpdatePlant;
@@ -23,6 +24,7 @@ public class PlantsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = ModuleAccess.PlantsRead)]
     [ProducesResponseType(typeof(IReadOnlyList<PlantDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<PlantDto>>> GetAll()
     {
@@ -31,6 +33,7 @@ public class PlantsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.PlantsRead)]
     [ProducesResponseType(typeof(PlantDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<PlantDto>> GetById(Guid id)
     {
@@ -39,6 +42,7 @@ public class PlantsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = ModuleAccess.PlantsWrite)]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> Create(CreatePlantRequest request)
     {
@@ -57,6 +61,7 @@ public class PlantsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.PlantsWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, UpdatePlantRequest request)
     {
@@ -76,6 +81,7 @@ public class PlantsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.PlantsWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {

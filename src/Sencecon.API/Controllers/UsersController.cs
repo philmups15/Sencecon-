@@ -1,11 +1,14 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.API.Authorization;
 using Sencecon.Application.Common.Interfaces;
 using Sencecon.Application.Users.Commands.ChangePassword;
 using Sencecon.Application.Users.Commands.UpdateProfile;
+using Sencecon.Application.Users.Commands.UpdateUserRole;
 using Sencecon.Application.Users.Queries.GetCurrentUser;
 using Sencecon.Application.Users.Queries.GetUsers;
+using Sencecon.Domain.Enums;
 
 namespace Sencecon.API.Controllers;
 
@@ -27,6 +30,7 @@ public class UsersController : ControllerBase
         ?? throw new UnauthorizedAccessException("No authenticated user.");
 
     [HttpGet]
+    [Authorize(Roles = Roles.Admin)]
     [ProducesResponseType(typeof(IReadOnlyList<UserDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<UserDto>>> GetAll()
     {
@@ -68,8 +72,25 @@ public class UsersController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPut("{id:guid}/role")]
+    [Authorize(Roles = Roles.Admin)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<UserDto>> UpdateRole(Guid id, UpdateUserRoleRequest request)
+    {
+        var result = await _sender.Send(new UpdateUserRoleCommand
+        {
+            UserId = id,
+            Role = request.Role,
+            RequestingUserId = CurrentUserId
+        });
+
+        return Ok(result);
+    }
 }
 
 public record UpdateProfileRequest(string DisplayName);
 
 public record ChangePasswordRequest(string CurrentPassword, string NewPassword);
+
+public record UpdateUserRoleRequest(UserRole Role);

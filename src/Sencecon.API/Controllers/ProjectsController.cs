@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.API.Authorization;
 using Sencecon.Application.Projects.Commands.CreateProject;
 using Sencecon.Application.Projects.Commands.DeleteProject;
 using Sencecon.Application.Projects.Commands.UpdateProject;
@@ -23,6 +24,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = ModuleAccess.ProjectsRead)]
     [ProducesResponseType(typeof(IReadOnlyList<ProjectDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<ProjectDto>>> GetAll()
     {
@@ -31,6 +33,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.ProjectsRead)]
     [ProducesResponseType(typeof(ProjectDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<ProjectDto>> GetById(Guid id)
     {
@@ -39,6 +42,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = ModuleAccess.ProjectsWrite)]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> Create(CreateProjectRequest request)
     {
@@ -57,6 +61,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.ProjectsWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, UpdateProjectRequest request)
     {
@@ -76,6 +81,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.ProjectsWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {

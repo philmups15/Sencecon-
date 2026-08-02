@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.API.Authorization;
 using Sencecon.Application.Opportunities.Commands.AddOpportunityNote;
 using Sencecon.Application.Opportunities.Commands.ChangeOpportunityStage;
 using Sencecon.Application.Opportunities.Commands.ConvertOpportunityToProject;
@@ -29,6 +30,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = ModuleAccess.OpportunitiesRead)]
     [ProducesResponseType(typeof(IReadOnlyList<OpportunityDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<OpportunityDto>>> GetAll()
     {
@@ -37,6 +39,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.OpportunitiesRead)]
     [ProducesResponseType(typeof(OpportunityDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<OpportunityDto>> GetById(Guid id)
     {
@@ -45,6 +48,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = ModuleAccess.OpportunitiesWrite)]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> Create(CreateOpportunityRequest request)
     {
@@ -63,6 +67,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.OpportunitiesWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, UpdateOpportunityRequest request)
     {
@@ -83,6 +88,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.OpportunitiesWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {
@@ -91,6 +97,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpPut("{id:guid}/stage")]
+    [Authorize(Roles = ModuleAccess.OpportunitiesWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> ChangeStage(Guid id, ChangeStageRequest request)
     {
@@ -105,6 +112,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpPut("{id:guid}/stage-data")]
+    [Authorize(Roles = ModuleAccess.OpportunitiesWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateStageData(Guid id, UpdateStageDataRequest request)
     {
@@ -118,6 +126,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpPost("{id:guid}/notes")]
+    [Authorize(Roles = ModuleAccess.OpportunitiesWrite)]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> AddNote(Guid id, AddNoteRequest request)
     {
@@ -131,6 +140,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpPost("{id:guid}/convert")]
+    [Authorize(Roles = ModuleAccess.OpportunitiesWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Convert(Guid id)
     {
@@ -139,6 +149,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpPost("{id:guid}/attachments")]
+    [Authorize(Roles = ModuleAccess.OpportunitiesWrite)]
     [RequestSizeLimit(60_000_000)]
     [ProducesResponseType(typeof(IReadOnlyList<OpportunityAttachmentDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<OpportunityAttachmentDto>>> UploadAttachments(Guid id, [FromForm] IFormFileCollection files, [FromForm] string? title)
@@ -167,6 +178,7 @@ public class OpportunitiesController : ControllerBase
     }
 
     [HttpGet("{id:guid}/attachments/{attachmentId:guid}")]
+    [Authorize(Roles = ModuleAccess.OpportunitiesRead)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> DownloadAttachment(Guid id, Guid attachmentId)
     {

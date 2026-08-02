@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Sencecon.API.Authorization;
 using Sencecon.Application.Reports.Commands.CreateReport;
 using Sencecon.Application.Reports.Commands.DeleteReport;
 using Sencecon.Application.Reports.Queries.GetReports;
@@ -20,6 +21,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = ModuleAccess.ReportsRead)]
     [ProducesResponseType(typeof(IReadOnlyList<ReportDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<ReportDto>>> GetAll()
     {
@@ -28,6 +30,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = ModuleAccess.ReportsWrite)]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> Create(CreateReportRequest request)
     {
@@ -41,6 +44,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = ModuleAccess.ReportsWrite)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {
