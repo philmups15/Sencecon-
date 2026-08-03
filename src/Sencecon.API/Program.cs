@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Sencecon.API.Authorization;
 using Sencecon.API.Middleware;
 using Sencecon.Application;
+using Sencecon.Application.RolePermissions;
 using Sencecon.Infrastructure;
 using Sencecon.Infrastructure.Persistence;
 
@@ -73,7 +76,16 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddScoped<IAuthorizationHandler, ModulePermissionAuthorizationHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    foreach (var module in ModuleCatalogue.Keys)
+    {
+        options.AddPolicy($"{module}-read", policy => policy.Requirements.Add(new ModulePermissionRequirement(module, "read")));
+        options.AddPolicy($"{module}-write", policy => policy.Requirements.Add(new ModulePermissionRequirement(module, "write")));
+    }
+});
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

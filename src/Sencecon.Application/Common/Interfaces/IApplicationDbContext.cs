@@ -22,6 +22,7 @@ public interface IApplicationDbContext
     DbSet<AuditLogEntry> AuditLogEntries { get; }
     DbSet<PasswordResetToken> PasswordResetTokens { get; }
     DbSet<IntegrationSetting> IntegrationSettings { get; }
+    DbSet<RolePermission> RolePermissions { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

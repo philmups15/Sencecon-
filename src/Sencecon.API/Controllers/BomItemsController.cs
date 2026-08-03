@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Sencecon.API.Authorization;
 using Sencecon.Application.BomItems.Commands.CreateBomItem;
 using Sencecon.Application.BomItems.Commands.DeleteBomItem;
 using Sencecon.Application.BomItems.Commands.UpdateBomItem;
@@ -24,7 +23,7 @@ public class BomItemsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = ModuleAccess.BomItemsRead)]
+    [Authorize(Policy = "bomItems-read")]
     [ProducesResponseType(typeof(IReadOnlyList<BomItemDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<BomItemDto>>> GetAll()
     {
@@ -33,7 +32,7 @@ public class BomItemsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = ModuleAccess.BomItemsRead)]
+    [Authorize(Policy = "bomItems-read")]
     [ProducesResponseType(typeof(BomItemDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<BomItemDto>> GetById(Guid id)
     {
@@ -42,7 +41,7 @@ public class BomItemsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = ModuleAccess.BomItemsWrite)]
+    [Authorize(Policy = "bomItems-write")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> Create(CreateBomItemRequest request)
     {
@@ -59,7 +58,7 @@ public class BomItemsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = ModuleAccess.BomItemsWrite)]
+    [Authorize(Policy = "bomItems-write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, UpdateBomItemRequest request)
     {
@@ -77,7 +76,7 @@ public class BomItemsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = ModuleAccess.BomItemsWrite)]
+    [Authorize(Policy = "bomItems-write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {

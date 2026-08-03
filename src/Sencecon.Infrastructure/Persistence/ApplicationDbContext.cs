@@ -33,6 +33,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IDataProte
     public DbSet<AuditLogEntry> AuditLogEntries => Set<AuditLogEntry>();
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
     public DbSet<IntegrationSetting> IntegrationSettings => Set<IntegrationSetting>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     public DbSet<Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey> DataProtectionKeys => Set<Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey>();
 

@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Sencecon.API.Authorization;
 using Sencecon.Application.Surveys.Commands.CreateSurvey;
 using Sencecon.Application.Surveys.Commands.DeleteSurvey;
 using Sencecon.Application.Surveys.Commands.UpdateSurvey;
@@ -24,7 +23,7 @@ public class SurveysController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = ModuleAccess.SurveysRead)]
+    [Authorize(Policy = "surveys-read")]
     [ProducesResponseType(typeof(IReadOnlyList<SurveyDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<SurveyDto>>> GetAll()
     {
@@ -33,7 +32,7 @@ public class SurveysController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = ModuleAccess.SurveysRead)]
+    [Authorize(Policy = "surveys-read")]
     [ProducesResponseType(typeof(SurveyDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<SurveyDto>> GetById(Guid id)
     {
@@ -42,7 +41,7 @@ public class SurveysController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = ModuleAccess.SurveysWrite)]
+    [Authorize(Policy = "surveys-write")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<ActionResult<Guid>> Create(CreateSurveyRequest request)
     {
@@ -60,7 +59,7 @@ public class SurveysController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = ModuleAccess.SurveysWrite)]
+    [Authorize(Policy = "surveys-write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, UpdateSurveyRequest request)
     {
@@ -79,7 +78,7 @@ public class SurveysController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = ModuleAccess.SurveysWrite)]
+    [Authorize(Policy = "surveys-write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {
