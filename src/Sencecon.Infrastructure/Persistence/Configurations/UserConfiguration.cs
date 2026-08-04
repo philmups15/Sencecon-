@@ -22,6 +22,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(100);
 
+        builder.Property(u => u.Username).HasMaxLength(100);
+        builder.Property(u => u.PhoneNumber).HasMaxLength(50);
+        builder.Property(u => u.Address).HasMaxLength(300);
+        builder.Property(u => u.JobDescription).HasMaxLength(200);
+        builder.Property(u => u.AvatarContentType).HasMaxLength(100);
+        builder.Property(u => u.AvatarFileName).HasMaxLength(260);
+
         // Explicit DB default matters here: without it, EF's migration would
         // default the column to false and every existing user would be
         // backfilled as disabled the moment this migration runs.

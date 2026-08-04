@@ -42,14 +42,6 @@ public class SetUserStatusCommandHandler : IRequestHandler<SetUserStatusCommand,
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new UserDto
-        {
-            Id = entity.Id,
-            Email = entity.Email,
-            DisplayName = entity.DisplayName,
-            Role = entity.Role,
-            IsActive = entity.IsActive,
-            Created = entity.Created
-        };
+        return entity.ToDto();
     }
 }

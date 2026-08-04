@@ -10,6 +10,10 @@ public record UpdateProfileCommand : IRequest<UserDto>
 {
     public required Guid UserId { get; init; }
     public required string DisplayName { get; init; }
+    public string? Username { get; init; }
+    public string? PhoneNumber { get; init; }
+    public string? Address { get; init; }
+    public string? JobDescription { get; init; }
 }
 
 public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, UserDto>
@@ -32,17 +36,14 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         }
 
         entity.DisplayName = request.DisplayName;
+        entity.Username = request.Username;
+        entity.PhoneNumber = request.PhoneNumber;
+        entity.Address = request.Address;
+        entity.JobDescription = request.JobDescription;
         entity.LastModified = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new UserDto
-        {
-            Id = entity.Id,
-            Email = entity.Email,
-            DisplayName = entity.DisplayName,
-            Role = entity.Role,
-            Created = entity.Created
-        };
+        return entity.ToDto();
     }
 }

@@ -12,6 +12,10 @@ public record RegisterCommand : IRequest<AuthResult>
     public required string Email { get; init; }
     public required string Password { get; init; }
     public required string DisplayName { get; init; }
+    public string? Username { get; init; }
+    public string? PhoneNumber { get; init; }
+    public string? Address { get; init; }
+    public string? JobDescription { get; init; }
 }
 
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthResult>
@@ -47,6 +51,10 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthResul
             Email = normalizedEmail,
             DisplayName = request.DisplayName,
             PasswordHash = _passwordHasher.Hash(request.Password),
+            Username = request.Username,
+            PhoneNumber = request.PhoneNumber,
+            Address = request.Address,
+            JobDescription = request.JobDescription,
             Created = DateTimeOffset.UtcNow
         };
 
