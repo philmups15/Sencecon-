@@ -23,6 +23,7 @@ public class GetSurveyByIdQueryHandler : IRequestHandler<GetSurveyByIdQuery, Sur
     public async Task<SurveyDto> Handle(GetSurveyByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.Surveys
+            .Include(s => s.Project)
             .FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -38,7 +39,9 @@ public class GetSurveyByIdQueryHandler : IRequestHandler<GetSurveyByIdQuery, Sur
             Status = entity.Status,
             Progress = entity.Progress,
             Surveyor = entity.Surveyor,
-            Date = entity.Date
+            Date = entity.Date,
+            ProjectId = entity.ProjectId,
+            ProjectName = entity.Project?.Name
         };
     }
 }

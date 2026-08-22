@@ -47,7 +47,6 @@ public class ProjectsController : ControllerBase
     {
         var id = await _sender.Send(new CreateProjectCommand
         {
-            Code = request.Code,
             Name = request.Name,
             Customer = request.Customer,
             Stage = request.Stage,
@@ -89,6 +88,6 @@ public class ProjectsController : ControllerBase
     }
 }
 
-public record CreateProjectRequest(string Code, string Name, string Customer, LifecycleStage Stage, string ProjectManager, decimal Budget, decimal Actual);
+public record CreateProjectRequest(string Name, string Customer, LifecycleStage Stage, string ProjectManager, decimal Budget, decimal Actual);
 
 public record UpdateProjectRequest(string Code, string Name, string Customer, LifecycleStage Stage, string ProjectManager, decimal Budget, decimal Actual);

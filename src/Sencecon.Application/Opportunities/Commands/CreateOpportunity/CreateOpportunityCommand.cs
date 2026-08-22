@@ -1,5 +1,5 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Sencecon.Application.Common;
 using Sencecon.Application.Common.Interfaces;
 using Sencecon.Domain.Entities;
 using Sencecon.Domain.Enums;
@@ -33,7 +33,7 @@ public class CreateOpportunityCommandHandler : IRequestHandler<CreateOpportunity
         var currentUserId = _currentUserService.UserId
             ?? throw new UnauthorizedAccessException("No authenticated user.");
 
-        var code = await GenerateNextCodeAsync(cancellationToken);
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Opportunities.Select(o => o.Code), "OPP-", cancellationToken);
 
         var entity = new Opportunity
         {
@@ -57,21 +57,5 @@ public class CreateOpportunityCommandHandler : IRequestHandler<CreateOpportunity
         await _context.SaveChangesAsync(cancellationToken);
 
         return entity.Id;
-    }
-
-    private async Task<string> GenerateNextCodeAsync(CancellationToken cancellationToken)
-    {
-        const string prefix = "OPP-";
-
-        var codes = await _context.Opportunities
-            .Select(o => o.Code)
-            .ToListAsync(cancellationToken);
-
-        var nextNumber = codes
-            .Select(c => c.StartsWith(prefix) && int.TryParse(c.AsSpan(prefix.Length), out var n) ? n : 0)
-            .DefaultIfEmpty(0)
-            .Max() + 1;
-
-        return $"{prefix}{nextNumber:000}";
     }
 }

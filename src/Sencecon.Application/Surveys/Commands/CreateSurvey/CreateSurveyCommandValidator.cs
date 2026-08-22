@@ -6,10 +6,6 @@ public class CreateSurveyCommandValidator : AbstractValidator<CreateSurveyComman
 {
     public CreateSurveyCommandValidator()
     {
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.PlantName)
             .NotEmpty()
             .MaximumLength(200);

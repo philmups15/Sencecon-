@@ -21,5 +21,10 @@ public class SurveyConfiguration : IEntityTypeConfiguration<Survey>
 
         builder.Property(s => s.Surveyor)
             .HasMaxLength(100);
+
+        builder.HasOne(s => s.Project)
+            .WithMany(p => p.Surveys)
+            .HasForeignKey(s => s.ProjectId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

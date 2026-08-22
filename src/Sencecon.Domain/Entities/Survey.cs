@@ -12,5 +12,8 @@ public class Survey : BaseAuditableEntity
     public string Surveyor { get; set; } = string.Empty;
     public DateTimeOffset Date { get; set; }
 
+    public Guid? ProjectId { get; set; }
+    public Project? Project { get; set; }
+
     public ICollection<Design> Designs { get; set; } = new List<Design>();
 }

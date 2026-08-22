@@ -11,4 +11,6 @@ public record SurveyDto
     public int Progress { get; init; }
     public string Surveyor { get; init; } = string.Empty;
     public DateTimeOffset Date { get; init; }
+    public Guid? ProjectId { get; init; }
+    public string? ProjectName { get; init; }
 }

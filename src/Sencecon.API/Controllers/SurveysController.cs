@@ -47,12 +47,12 @@ public class SurveysController : ControllerBase
     {
         var id = await _sender.Send(new CreateSurveyCommand
         {
-            Code = request.Code,
             PlantName = request.PlantName,
             Status = request.Status,
             Progress = request.Progress,
             Surveyor = request.Surveyor,
-            Date = request.Date
+            Date = request.Date,
+            ProjectId = request.ProjectId
         });
 
         return CreatedAtAction(nameof(GetById), new { id }, id);
@@ -71,7 +71,8 @@ public class SurveysController : ControllerBase
             Status = request.Status,
             Progress = request.Progress,
             Surveyor = request.Surveyor,
-            Date = request.Date
+            Date = request.Date,
+            ProjectId = request.ProjectId
         });
 
         return NoContent();
@@ -87,6 +88,6 @@ public class SurveysController : ControllerBase
     }
 }
 
-public record CreateSurveyRequest(string Code, string PlantName, SurveyStatus Status, int Progress, string Surveyor, DateTimeOffset Date);
+public record CreateSurveyRequest(string PlantName, SurveyStatus Status, int Progress, string Surveyor, DateTimeOffset Date, Guid? ProjectId);
 
-public record UpdateSurveyRequest(string Code, string PlantName, SurveyStatus Status, int Progress, string Surveyor, DateTimeOffset Date);
+public record UpdateSurveyRequest(string Code, string PlantName, SurveyStatus Status, int Progress, string Surveyor, DateTimeOffset Date, Guid? ProjectId);

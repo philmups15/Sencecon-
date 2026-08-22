@@ -12,4 +12,6 @@ public class Project : BaseAuditableEntity
     public string ProjectManager { get; set; } = string.Empty;
     public decimal Budget { get; set; }
     public decimal Actual { get; set; }
+
+    public ICollection<Survey> Surveys { get; set; } = new List<Survey>();
 }

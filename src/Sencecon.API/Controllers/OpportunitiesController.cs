@@ -140,11 +140,11 @@ public class OpportunitiesController : ControllerBase
 
     [HttpPost("{id:guid}/convert")]
     [Authorize(Policy = "opportunities-write")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> Convert(Guid id)
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Guid>> Convert(Guid id)
     {
-        await _sender.Send(new ConvertOpportunityToProjectCommand { OpportunityId = id });
-        return NoContent();
+        var projectId = await _sender.Send(new ConvertOpportunityToProjectCommand { OpportunityId = id });
+        return Ok(projectId);
     }
 
     [HttpPost("{id:guid}/attachments")]

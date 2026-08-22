@@ -27,7 +27,9 @@ public class GetSurveysQueryHandler : IRequestHandler<GetSurveysQuery, IReadOnly
                 Status = s.Status,
                 Progress = s.Progress,
                 Surveyor = s.Surveyor,
-                Date = s.Date
+                Date = s.Date,
+                ProjectId = s.ProjectId,
+                ProjectName = s.Project != null ? s.Project.Name : null
             })
             .ToListAsync(cancellationToken);
     }
