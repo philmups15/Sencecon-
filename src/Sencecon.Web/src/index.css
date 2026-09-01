@@ -1,0 +1,36 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Source Sans 3', -apple-system, sans-serif;
+  background: #F4F8F7;
+  color: #12201F;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Manrope', -apple-system, sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D7E4E1;
+  border-radius: 8px;
+}
+
+a {
+  color: #1F6E72;
+}
+
+a:hover {
+  color: #12484B;
+}
+
+button {
+  font-family: inherit;
+}
