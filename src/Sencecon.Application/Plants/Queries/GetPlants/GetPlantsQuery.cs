@@ -29,6 +29,8 @@ public class GetPlantsQueryHandler : IRequestHandler<GetPlantsQuery, IReadOnlyLi
                 Equipment = p.Equipment,
                 PerformanceRatio = p.PerformanceRatio,
                 Health = p.Health,
+                ProjectId = p.ProjectId,
+                ProjectName = p.Project != null ? p.Project.Name : null,
                 Created = p.Created
             })
             .ToListAsync(cancellationToken);

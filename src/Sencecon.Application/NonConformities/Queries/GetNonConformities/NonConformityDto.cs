@@ -9,5 +9,6 @@ public record NonConformityDto
     public string Description { get; init; } = string.Empty;
     public string PlantName { get; init; } = string.Empty;
     public NonConformityStatus Status { get; init; }
+    public Guid? PlantId { get; init; }
     public DateTimeOffset Created { get; init; }
 }

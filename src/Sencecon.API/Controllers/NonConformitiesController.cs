@@ -50,7 +50,8 @@ public class NonConformitiesController : ControllerBase
             Code = request.Code,
             Description = request.Description,
             PlantName = request.PlantName,
-            Status = request.Status
+            Status = request.Status,
+            PlantId = request.PlantId
         });
 
         return CreatedAtAction(nameof(GetById), new { id }, id);
@@ -67,7 +68,8 @@ public class NonConformitiesController : ControllerBase
             Code = request.Code,
             Description = request.Description,
             PlantName = request.PlantName,
-            Status = request.Status
+            Status = request.Status,
+            PlantId = request.PlantId
         });
 
         return NoContent();
@@ -83,6 +85,6 @@ public class NonConformitiesController : ControllerBase
     }
 }
 
-public record CreateNonConformityRequest(string Code, string Description, string PlantName, NonConformityStatus Status);
+public record CreateNonConformityRequest(string Code, string Description, string PlantName, NonConformityStatus Status, Guid? PlantId);
 
-public record UpdateNonConformityRequest(string Code, string Description, string PlantName, NonConformityStatus Status);
+public record UpdateNonConformityRequest(string Code, string Description, string PlantName, NonConformityStatus Status, Guid? PlantId);

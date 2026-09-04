@@ -13,4 +13,5 @@ public record SurveyDto
     public DateTimeOffset Date { get; init; }
     public Guid? ProjectId { get; init; }
     public string? ProjectName { get; init; }
+    public Guid? PlantId { get; init; }
 }

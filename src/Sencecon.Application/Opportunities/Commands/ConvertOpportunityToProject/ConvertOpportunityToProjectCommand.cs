@@ -60,10 +60,25 @@ public class ConvertOpportunityToProjectCommandHandler : IRequestHandler<Convert
 
         _context.Projects.Add(project);
 
+        var plantCode = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Plants.Select(p => p.Code), "PLT-", cancellationToken);
+
+        var plant = new Plant
+        {
+            Code = plantCode,
+            Name = project.Name,
+            Stage = LifecycleStage.DesignSurvey,
+            Capacity = entity.Capacity,
+            Health = PlantHealth.Unknown,
+            ProjectId = project.Id,
+            Created = DateTimeOffset.UtcNow
+        };
+
+        _context.Plants.Add(plant);
+
         entity.Converted = true;
         entity.LastModified = DateTimeOffset.UtcNow;
 
-        OpportunityActivityLogger.Log(_context, entity.Id, "edit", "Converted opportunity to project", _currentUserService.UserId);
+        OpportunityActivityLogger.Log(_context, entity.Id, "edit", $"Converted opportunity to project {project.Code} and created plant {plant.Code}", _currentUserService.UserId);
 
         await _context.SaveChangesAsync(cancellationToken);
 

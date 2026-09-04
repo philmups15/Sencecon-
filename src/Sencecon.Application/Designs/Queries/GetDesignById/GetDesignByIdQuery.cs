@@ -23,7 +23,9 @@ public class GetDesignByIdQueryHandler : IRequestHandler<GetDesignByIdQuery, Des
     public async Task<DesignDto> Handle(GetDesignByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.Designs
+            .Include(d => d.Project)
             .Include(d => d.Survey)
+                .ThenInclude(s => s!.Project)
             .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -35,11 +37,12 @@ public class GetDesignByIdQueryHandler : IRequestHandler<GetDesignByIdQuery, Des
         {
             Id = entity.Id,
             Code = entity.Code,
-            ProjectName = entity.ProjectName,
+            ProjectName = entity.Project?.Name ?? entity.Survey?.Project?.Name ?? entity.ProjectName,
             Status = entity.Status,
             Revision = entity.Revision,
             SurveyId = entity.SurveyId,
             SurveyCode = entity.Survey?.Code,
+            ProjectId = entity.ProjectId ?? entity.Survey?.ProjectId,
             Created = entity.Created
         };
     }

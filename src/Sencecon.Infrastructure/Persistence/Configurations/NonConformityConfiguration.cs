@@ -21,5 +21,12 @@ public class NonConformityConfiguration : IEntityTypeConfiguration<NonConformity
 
         builder.Property(n => n.PlantName)
             .HasMaxLength(200);
+
+        builder.HasOne(n => n.Plant)
+            .WithMany(p => p.NonConformities)
+            .HasForeignKey(n => n.PlantId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasIndex(n => n.PlantId);
     }
 }

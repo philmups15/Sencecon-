@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Sencecon.Application.Common;
 using Sencecon.Application.Common.Interfaces;
 using Sencecon.Domain.Entities;
 using Sencecon.Domain.Enums;
@@ -9,7 +10,6 @@ namespace Sencecon.Application.WorkOrders.Commands.CreateWorkOrder;
 
 public record CreateWorkOrderCommand : IRequest<Guid>
 {
-    public required string Code { get; init; }
     public required string Title { get; init; }
     public WorkOrderType Type { get; init; }
     public Priority Priority { get; init; }
@@ -37,9 +37,11 @@ public class CreateWorkOrderCommandHandler : IRequestHandler<CreateWorkOrderComm
             throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId);
         }
 
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.WorkOrders.Select(w => w.Code), "WO-", cancellationToken);
+
         var entity = new WorkOrder
         {
-            Code = request.Code,
+            Code = code,
             Title = request.Title,
             Type = request.Type,
             Priority = request.Priority,

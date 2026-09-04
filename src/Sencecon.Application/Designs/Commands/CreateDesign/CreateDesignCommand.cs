@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Sencecon.Application.Common;
 using Sencecon.Application.Common.Interfaces;
 using Sencecon.Domain.Entities;
 using Sencecon.Domain.Enums;
@@ -9,11 +10,11 @@ namespace Sencecon.Application.Designs.Commands.CreateDesign;
 
 public record CreateDesignCommand : IRequest<Guid>
 {
-    public required string Code { get; init; }
     public required string ProjectName { get; init; }
     public DesignStatus Status { get; init; }
     public string Revision { get; init; } = string.Empty;
     public Guid? SurveyId { get; init; }
+    public Guid? ProjectId { get; init; }
 }
 
 public class CreateDesignCommandHandler : IRequestHandler<CreateDesignCommand, Guid>
@@ -38,13 +39,27 @@ public class CreateDesignCommandHandler : IRequestHandler<CreateDesignCommand, G
             }
         }
 
+        if (request.ProjectId.HasValue)
+        {
+            var projectExists = await _context.Projects
+                .AnyAsync(p => p.Id == request.ProjectId.Value, cancellationToken);
+
+            if (!projectExists)
+            {
+                throw new NotFoundException(nameof(Domain.Entities.Project), request.ProjectId.Value);
+            }
+        }
+
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Designs.Select(d => d.Code), "DSN-", cancellationToken);
+
         var entity = new Design
         {
-            Code = request.Code,
+            Code = code,
             ProjectName = request.ProjectName,
             Status = request.Status,
             Revision = request.Revision,
             SurveyId = request.SurveyId,
+            ProjectId = request.ProjectId,
             Created = DateTimeOffset.UtcNow
         };
 

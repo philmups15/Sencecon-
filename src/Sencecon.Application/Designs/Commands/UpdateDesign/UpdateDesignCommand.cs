@@ -9,11 +9,11 @@ namespace Sencecon.Application.Designs.Commands.UpdateDesign;
 public record UpdateDesignCommand : IRequest
 {
     public required Guid Id { get; init; }
-    public required string Code { get; init; }
     public required string ProjectName { get; init; }
     public DesignStatus Status { get; init; }
     public string Revision { get; init; } = string.Empty;
     public Guid? SurveyId { get; init; }
+    public Guid? ProjectId { get; init; }
 }
 
 public class UpdateDesignCommandHandler : IRequestHandler<UpdateDesignCommand>
@@ -46,11 +46,22 @@ public class UpdateDesignCommandHandler : IRequestHandler<UpdateDesignCommand>
             }
         }
 
-        entity.Code = request.Code;
+        if (request.ProjectId.HasValue)
+        {
+            var projectExists = await _context.Projects
+                .AnyAsync(p => p.Id == request.ProjectId.Value, cancellationToken);
+
+            if (!projectExists)
+            {
+                throw new NotFoundException(nameof(Domain.Entities.Project), request.ProjectId.Value);
+            }
+        }
+
         entity.ProjectName = request.ProjectName;
         entity.Status = request.Status;
         entity.Revision = request.Revision;
         entity.SurveyId = request.SurveyId;
+        entity.ProjectId = request.ProjectId;
         entity.LastModified = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);

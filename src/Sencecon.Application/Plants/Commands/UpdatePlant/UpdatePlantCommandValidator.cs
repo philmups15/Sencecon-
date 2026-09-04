@@ -9,10 +9,6 @@ public class UpdatePlantCommandValidator : AbstractValidator<UpdatePlantCommand>
         RuleFor(v => v.Id)
             .NotEmpty();
 
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.Name)
             .NotEmpty()
             .MaximumLength(200);

@@ -9,10 +9,6 @@ public class UpdateWorkOrderCommandValidator : AbstractValidator<UpdateWorkOrder
         RuleFor(v => v.Id)
             .NotEmpty();
 
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.Title)
             .NotEmpty()
             .MaximumLength(200);

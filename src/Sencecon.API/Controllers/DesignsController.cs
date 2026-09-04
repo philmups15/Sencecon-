@@ -47,11 +47,11 @@ public class DesignsController : ControllerBase
     {
         var id = await _sender.Send(new CreateDesignCommand
         {
-            Code = request.Code,
             ProjectName = request.ProjectName,
             Status = request.Status,
             Revision = request.Revision,
-            SurveyId = request.SurveyId
+            SurveyId = request.SurveyId,
+            ProjectId = request.ProjectId
         });
 
         return CreatedAtAction(nameof(GetById), new { id }, id);
@@ -65,11 +65,11 @@ public class DesignsController : ControllerBase
         await _sender.Send(new UpdateDesignCommand
         {
             Id = id,
-            Code = request.Code,
             ProjectName = request.ProjectName,
             Status = request.Status,
             Revision = request.Revision,
-            SurveyId = request.SurveyId
+            SurveyId = request.SurveyId,
+            ProjectId = request.ProjectId
         });
 
         return NoContent();
@@ -85,6 +85,6 @@ public class DesignsController : ControllerBase
     }
 }
 
-public record CreateDesignRequest(string Code, string ProjectName, DesignStatus Status, string Revision, Guid? SurveyId);
+public record CreateDesignRequest(string ProjectName, DesignStatus Status, string Revision, Guid? SurveyId, Guid? ProjectId);
 
-public record UpdateDesignRequest(string Code, string ProjectName, DesignStatus Status, string Revision, Guid? SurveyId);
+public record UpdateDesignRequest(string ProjectName, DesignStatus Status, string Revision, Guid? SurveyId, Guid? ProjectId);

@@ -9,7 +9,6 @@ namespace Sencecon.Application.WorkOrders.Commands.UpdateWorkOrder;
 public record UpdateWorkOrderCommand : IRequest
 {
     public required Guid Id { get; init; }
-    public required string Code { get; init; }
     public required string Title { get; init; }
     public WorkOrderType Type { get; init; }
     public Priority Priority { get; init; }
@@ -45,7 +44,6 @@ public class UpdateWorkOrderCommandHandler : IRequestHandler<UpdateWorkOrderComm
             throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId);
         }
 
-        entity.Code = request.Code;
         entity.Title = request.Title;
         entity.Type = request.Type;
         entity.Priority = request.Priority;

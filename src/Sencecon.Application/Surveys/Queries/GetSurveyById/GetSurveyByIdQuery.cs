@@ -24,6 +24,7 @@ public class GetSurveyByIdQueryHandler : IRequestHandler<GetSurveyByIdQuery, Sur
     {
         var entity = await _context.Surveys
             .Include(s => s.Project)
+            .Include(s => s.Plant)
             .FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -35,13 +36,14 @@ public class GetSurveyByIdQueryHandler : IRequestHandler<GetSurveyByIdQuery, Sur
         {
             Id = entity.Id,
             Code = entity.Code,
-            PlantName = entity.PlantName,
+            PlantName = entity.Plant?.Name ?? entity.PlantName,
             Status = entity.Status,
             Progress = entity.Progress,
             Surveyor = entity.Surveyor,
             Date = entity.Date,
             ProjectId = entity.ProjectId,
-            ProjectName = entity.Project?.Name
+            ProjectName = entity.Project?.Name,
+            PlantId = entity.PlantId
         };
     }
 }

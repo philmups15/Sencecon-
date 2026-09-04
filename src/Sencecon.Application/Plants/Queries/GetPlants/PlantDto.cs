@@ -12,5 +12,7 @@ public record PlantDto
     public string Equipment { get; init; } = string.Empty;
     public double? PerformanceRatio { get; init; }
     public PlantHealth Health { get; init; }
+    public Guid? ProjectId { get; init; }
+    public string? ProjectName { get; init; }
     public DateTimeOffset Created { get; init; }
 }

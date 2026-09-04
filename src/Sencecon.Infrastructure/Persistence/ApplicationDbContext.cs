@@ -19,6 +19,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IDataProte
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Plant> Plants => Set<Plant>();
+    public DbSet<PlantAttachment> PlantAttachments => Set<PlantAttachment>();
+    public DbSet<CommissioningTestResult> CommissioningTestResults => Set<CommissioningTestResult>();
     public DbSet<WorkOrder> WorkOrders => Set<WorkOrder>();
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Opportunity> Opportunities => Set<Opportunity>();

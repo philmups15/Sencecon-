@@ -12,4 +12,7 @@ public class Design : BaseAuditableEntity
 
     public Guid? SurveyId { get; set; }
     public Survey? Survey { get; set; }
+
+    public Guid? ProjectId { get; set; }
+    public Project? Project { get; set; }
 }

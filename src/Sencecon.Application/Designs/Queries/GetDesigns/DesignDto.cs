@@ -11,5 +11,6 @@ public record DesignDto
     public string Revision { get; init; } = string.Empty;
     public Guid? SurveyId { get; init; }
     public string? SurveyCode { get; init; }
+    public Guid? ProjectId { get; init; }
     public DateTimeOffset Created { get; init; }
 }
