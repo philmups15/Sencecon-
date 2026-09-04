@@ -6,10 +6,6 @@ public class CreateWorkOrderCommandValidator : AbstractValidator<CreateWorkOrder
 {
     public CreateWorkOrderCommandValidator()
     {
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.Title)
             .NotEmpty()
             .MaximumLength(200);

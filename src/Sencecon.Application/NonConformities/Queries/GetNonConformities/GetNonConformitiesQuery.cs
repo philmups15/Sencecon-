@@ -24,8 +24,9 @@ public class GetNonConformitiesQueryHandler : IRequestHandler<GetNonConformities
                 Id = n.Id,
                 Code = n.Code,
                 Description = n.Description,
-                PlantName = n.PlantName,
+                PlantName = n.Plant != null ? n.Plant.Name : n.PlantName,
                 Status = n.Status,
+                PlantId = n.PlantId,
                 Created = n.Created
             })
             .ToListAsync(cancellationToken);

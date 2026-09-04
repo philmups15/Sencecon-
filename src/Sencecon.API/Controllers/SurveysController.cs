@@ -52,7 +52,8 @@ public class SurveysController : ControllerBase
             Progress = request.Progress,
             Surveyor = request.Surveyor,
             Date = request.Date,
-            ProjectId = request.ProjectId
+            ProjectId = request.ProjectId,
+            PlantId = request.PlantId
         });
 
         return CreatedAtAction(nameof(GetById), new { id }, id);
@@ -72,7 +73,8 @@ public class SurveysController : ControllerBase
             Progress = request.Progress,
             Surveyor = request.Surveyor,
             Date = request.Date,
-            ProjectId = request.ProjectId
+            ProjectId = request.ProjectId,
+            PlantId = request.PlantId
         });
 
         return NoContent();
@@ -88,6 +90,6 @@ public class SurveysController : ControllerBase
     }
 }
 
-public record CreateSurveyRequest(string PlantName, SurveyStatus Status, int Progress, string Surveyor, DateTimeOffset Date, Guid? ProjectId);
+public record CreateSurveyRequest(string PlantName, SurveyStatus Status, int Progress, string Surveyor, DateTimeOffset Date, Guid? ProjectId, Guid? PlantId);
 
-public record UpdateSurveyRequest(string Code, string PlantName, SurveyStatus Status, int Progress, string Surveyor, DateTimeOffset Date, Guid? ProjectId);
+public record UpdateSurveyRequest(string Code, string PlantName, SurveyStatus Status, int Progress, string Surveyor, DateTimeOffset Date, Guid? ProjectId, Guid? PlantId);

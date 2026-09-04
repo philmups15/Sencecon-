@@ -14,6 +14,7 @@ public record UpdateBomItemCommand : IRequest
     public decimal UnitCost { get; init; }
     public string Supplier { get; init; } = string.Empty;
     public BomStatus Status { get; init; }
+    public Guid? PlantId { get; init; }
 }
 
 public class UpdateBomItemCommandHandler : IRequestHandler<UpdateBomItemCommand>
@@ -35,11 +36,23 @@ public class UpdateBomItemCommandHandler : IRequestHandler<UpdateBomItemCommand>
             throw new NotFoundException(nameof(Domain.Entities.BomItem), request.Id);
         }
 
+        if (request.PlantId.HasValue)
+        {
+            var plantExists = await _context.Plants
+                .AnyAsync(p => p.Id == request.PlantId.Value, cancellationToken);
+
+            if (!plantExists)
+            {
+                throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId.Value);
+            }
+        }
+
         entity.Component = request.Component;
         entity.Quantity = request.Quantity;
         entity.UnitCost = request.UnitCost;
         entity.Supplier = request.Supplier;
         entity.Status = request.Status;
+        entity.PlantId = request.PlantId;
         entity.LastModified = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);

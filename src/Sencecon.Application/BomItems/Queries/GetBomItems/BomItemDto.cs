@@ -10,5 +10,7 @@ public record BomItemDto
     public decimal UnitCost { get; init; }
     public string Supplier { get; init; } = string.Empty;
     public BomStatus Status { get; init; }
+    public Guid? PlantId { get; init; }
+    public string? PlantName { get; init; }
     public DateTimeOffset Created { get; init; }
 }

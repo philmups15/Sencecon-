@@ -13,6 +13,7 @@ public record UpdateNonConformityCommand : IRequest
     public required string Description { get; init; }
     public string PlantName { get; init; } = string.Empty;
     public NonConformityStatus Status { get; init; }
+    public Guid? PlantId { get; init; }
 }
 
 public class UpdateNonConformityCommandHandler : IRequestHandler<UpdateNonConformityCommand>
@@ -34,10 +35,22 @@ public class UpdateNonConformityCommandHandler : IRequestHandler<UpdateNonConfor
             throw new NotFoundException(nameof(Domain.Entities.NonConformity), request.Id);
         }
 
+        if (request.PlantId.HasValue)
+        {
+            var plantExists = await _context.Plants
+                .AnyAsync(p => p.Id == request.PlantId.Value, cancellationToken);
+
+            if (!plantExists)
+            {
+                throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId.Value);
+            }
+        }
+
         entity.Code = request.Code;
         entity.Description = request.Description;
         entity.PlantName = request.PlantName;
         entity.Status = request.Status;
+        entity.PlantId = request.PlantId;
         entity.LastModified = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);

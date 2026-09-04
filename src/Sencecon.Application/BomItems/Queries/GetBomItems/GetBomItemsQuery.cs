@@ -27,6 +27,8 @@ public class GetBomItemsQueryHandler : IRequestHandler<GetBomItemsQuery, IReadOn
                 UnitCost = b.UnitCost,
                 Supplier = b.Supplier,
                 Status = b.Status,
+                PlantId = b.PlantId,
+                PlantName = b.Plant != null ? b.Plant.Name : null,
                 Created = b.Created
             })
             .ToListAsync(cancellationToken);

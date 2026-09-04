@@ -9,10 +9,6 @@ public class UpdateDesignCommandValidator : AbstractValidator<UpdateDesignComman
         RuleFor(v => v.Id)
             .NotEmpty();
 
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.ProjectName)
             .NotEmpty()
             .MaximumLength(200);

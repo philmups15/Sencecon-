@@ -47,7 +47,6 @@ public class WorkOrdersController : ControllerBase
     {
         var id = await _sender.Send(new CreateWorkOrderCommand
         {
-            Code = request.Code,
             Title = request.Title,
             Type = request.Type,
             Priority = request.Priority,
@@ -67,7 +66,6 @@ public class WorkOrdersController : ControllerBase
         await _sender.Send(new UpdateWorkOrderCommand
         {
             Id = id,
-            Code = request.Code,
             Title = request.Title,
             Type = request.Type,
             Priority = request.Priority,
@@ -89,6 +87,6 @@ public class WorkOrdersController : ControllerBase
     }
 }
 
-public record CreateWorkOrderRequest(string Code, string Title, WorkOrderType Type, Priority Priority, string Assignee, WorkOrderStatus Status, Guid PlantId);
+public record CreateWorkOrderRequest(string Title, WorkOrderType Type, Priority Priority, string Assignee, WorkOrderStatus Status, Guid PlantId);
 
-public record UpdateWorkOrderRequest(string Code, string Title, WorkOrderType Type, Priority Priority, string Assignee, WorkOrderStatus Status, Guid PlantId);
+public record UpdateWorkOrderRequest(string Title, WorkOrderType Type, Priority Priority, string Assignee, WorkOrderStatus Status, Guid PlantId);

@@ -23,6 +23,7 @@ public class GetBomItemByIdQueryHandler : IRequestHandler<GetBomItemByIdQuery, B
     public async Task<BomItemDto> Handle(GetBomItemByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.BomItems
+            .Include(b => b.Plant)
             .FirstOrDefaultAsync(b => b.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -38,6 +39,8 @@ public class GetBomItemByIdQueryHandler : IRequestHandler<GetBomItemByIdQuery, B
             UnitCost = entity.UnitCost,
             Supplier = entity.Supplier,
             Status = entity.Status,
+            PlantId = entity.PlantId,
+            PlantName = entity.Plant?.Name,
             Created = entity.Created
         };
     }

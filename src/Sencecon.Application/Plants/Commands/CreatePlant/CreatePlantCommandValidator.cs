@@ -6,10 +6,6 @@ public class CreatePlantCommandValidator : AbstractValidator<CreatePlantCommand>
 {
     public CreatePlantCommandValidator()
     {
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.Name)
             .NotEmpty()
             .MaximumLength(200);

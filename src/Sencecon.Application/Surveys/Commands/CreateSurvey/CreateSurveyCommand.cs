@@ -16,6 +16,7 @@ public record CreateSurveyCommand : IRequest<Guid>
     public string Surveyor { get; init; } = string.Empty;
     public DateTimeOffset Date { get; init; }
     public Guid? ProjectId { get; init; }
+    public Guid? PlantId { get; init; }
 }
 
 public class CreateSurveyCommandHandler : IRequestHandler<CreateSurveyCommand, Guid>
@@ -40,6 +41,17 @@ public class CreateSurveyCommandHandler : IRequestHandler<CreateSurveyCommand, G
             }
         }
 
+        if (request.PlantId.HasValue)
+        {
+            var plantExists = await _context.Plants
+                .AnyAsync(p => p.Id == request.PlantId.Value, cancellationToken);
+
+            if (!plantExists)
+            {
+                throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId.Value);
+            }
+        }
+
         var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Surveys.Select(s => s.Code), "SUR-", cancellationToken);
 
         var entity = new Survey
@@ -51,6 +63,7 @@ public class CreateSurveyCommandHandler : IRequestHandler<CreateSurveyCommand, G
             Surveyor = request.Surveyor,
             Date = request.Date,
             ProjectId = request.ProjectId,
+            PlantId = request.PlantId,
             Created = DateTimeOffset.UtcNow
         };
 

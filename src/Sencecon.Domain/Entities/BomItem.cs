@@ -10,4 +10,7 @@ public class BomItem : BaseAuditableEntity
     public decimal UnitCost { get; set; }
     public string Supplier { get; set; } = string.Empty;
     public BomStatus Status { get; set; }
+
+    public Guid? PlantId { get; set; }
+    public Plant? Plant { get; set; }
 }

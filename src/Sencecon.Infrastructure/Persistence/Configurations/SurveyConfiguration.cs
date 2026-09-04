@@ -26,5 +26,12 @@ public class SurveyConfiguration : IEntityTypeConfiguration<Survey>
             .WithMany(p => p.Surveys)
             .HasForeignKey(s => s.ProjectId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(s => s.Plant)
+            .WithMany(p => p.Surveys)
+            .HasForeignKey(s => s.PlantId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasIndex(s => s.PlantId);
     }
 }

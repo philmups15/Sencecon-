@@ -23,6 +23,7 @@ public class GetPlantByIdQueryHandler : IRequestHandler<GetPlantByIdQuery, Plant
     public async Task<PlantDto> Handle(GetPlantByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.Plants
+            .Include(p => p.Project)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -40,6 +41,8 @@ public class GetPlantByIdQueryHandler : IRequestHandler<GetPlantByIdQuery, Plant
             Equipment = entity.Equipment,
             PerformanceRatio = entity.PerformanceRatio,
             Health = entity.Health,
+            ProjectId = entity.ProjectId,
+            ProjectName = entity.Project?.Name,
             Created = entity.Created
         };
     }

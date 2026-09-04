@@ -14,4 +14,6 @@ public class Project : BaseAuditableEntity
     public decimal Actual { get; set; }
 
     public ICollection<Survey> Surveys { get; set; } = new List<Survey>();
+    public ICollection<Plant> Plants { get; set; } = new List<Plant>();
+    public ICollection<Design> Designs { get; set; } = new List<Design>();
 }

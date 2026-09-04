@@ -26,5 +26,12 @@ public class DesignConfiguration : IEntityTypeConfiguration<Design>
             .WithMany(s => s.Designs)
             .HasForeignKey(d => d.SurveyId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(d => d.Project)
+            .WithMany(p => p.Designs)
+            .HasForeignKey(d => d.ProjectId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasIndex(d => d.ProjectId);
     }
 }

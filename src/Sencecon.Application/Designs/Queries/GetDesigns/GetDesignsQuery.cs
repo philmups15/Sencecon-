@@ -23,11 +23,14 @@ public class GetDesignsQueryHandler : IRequestHandler<GetDesignsQuery, IReadOnly
             {
                 Id = d.Id,
                 Code = d.Code,
-                ProjectName = d.ProjectName,
+                ProjectName = d.Project != null
+                    ? d.Project.Name
+                    : (d.Survey != null && d.Survey.Project != null ? d.Survey.Project.Name : d.ProjectName),
                 Status = d.Status,
                 Revision = d.Revision,
                 SurveyId = d.SurveyId,
                 SurveyCode = d.Survey != null ? d.Survey.Code : null,
+                ProjectId = d.ProjectId ?? (d.Survey != null ? d.Survey.ProjectId : null),
                 Created = d.Created
             })
             .ToListAsync(cancellationToken);

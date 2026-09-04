@@ -23,6 +23,7 @@ public class GetNonConformityByIdQueryHandler : IRequestHandler<GetNonConformity
     public async Task<NonConformityDto> Handle(GetNonConformityByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.NonConformities
+            .Include(n => n.Plant)
             .FirstOrDefaultAsync(n => n.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -35,8 +36,9 @@ public class GetNonConformityByIdQueryHandler : IRequestHandler<GetNonConformity
             Id = entity.Id,
             Code = entity.Code,
             Description = entity.Description,
-            PlantName = entity.PlantName,
+            PlantName = entity.Plant?.Name ?? entity.PlantName,
             Status = entity.Status,
+            PlantId = entity.PlantId,
             Created = entity.Created
         };
     }

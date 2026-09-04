@@ -1,7 +1,9 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Sencecon.Application.Common.Interfaces;
 using Sencecon.Domain.Entities;
 using Sencecon.Domain.Enums;
+using Sencecon.Domain.Exceptions;
 
 namespace Sencecon.Application.NonConformities.Commands.CreateNonConformity;
 
@@ -11,6 +13,7 @@ public record CreateNonConformityCommand : IRequest<Guid>
     public required string Description { get; init; }
     public string PlantName { get; init; } = string.Empty;
     public NonConformityStatus Status { get; init; }
+    public Guid? PlantId { get; init; }
 }
 
 public class CreateNonConformityCommandHandler : IRequestHandler<CreateNonConformityCommand, Guid>
@@ -24,12 +27,24 @@ public class CreateNonConformityCommandHandler : IRequestHandler<CreateNonConfor
 
     public async Task<Guid> Handle(CreateNonConformityCommand request, CancellationToken cancellationToken)
     {
+        if (request.PlantId.HasValue)
+        {
+            var plantExists = await _context.Plants
+                .AnyAsync(p => p.Id == request.PlantId.Value, cancellationToken);
+
+            if (!plantExists)
+            {
+                throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId.Value);
+            }
+        }
+
         var entity = new NonConformity
         {
             Code = request.Code,
             Description = request.Description,
             PlantName = request.PlantName,
             Status = request.Status,
+            PlantId = request.PlantId,
             Created = DateTimeOffset.UtcNow
         };
 

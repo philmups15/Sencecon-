@@ -51,7 +51,8 @@ public class BomItemsController : ControllerBase
             Quantity = request.Quantity,
             UnitCost = request.UnitCost,
             Supplier = request.Supplier,
-            Status = request.Status
+            Status = request.Status,
+            PlantId = request.PlantId
         });
 
         return CreatedAtAction(nameof(GetById), new { id }, id);
@@ -69,7 +70,8 @@ public class BomItemsController : ControllerBase
             Quantity = request.Quantity,
             UnitCost = request.UnitCost,
             Supplier = request.Supplier,
-            Status = request.Status
+            Status = request.Status,
+            PlantId = request.PlantId
         });
 
         return NoContent();
@@ -85,6 +87,6 @@ public class BomItemsController : ControllerBase
     }
 }
 
-public record CreateBomItemRequest(string Component, int Quantity, decimal UnitCost, string Supplier, BomStatus Status);
+public record CreateBomItemRequest(string Component, int Quantity, decimal UnitCost, string Supplier, BomStatus Status, Guid? PlantId);
 
-public record UpdateBomItemRequest(string Component, int Quantity, decimal UnitCost, string Supplier, BomStatus Status);
+public record UpdateBomItemRequest(string Component, int Quantity, decimal UnitCost, string Supplier, BomStatus Status, Guid? PlantId);

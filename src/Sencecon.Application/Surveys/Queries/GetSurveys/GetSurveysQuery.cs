@@ -23,13 +23,14 @@ public class GetSurveysQueryHandler : IRequestHandler<GetSurveysQuery, IReadOnly
             {
                 Id = s.Id,
                 Code = s.Code,
-                PlantName = s.PlantName,
+                PlantName = s.Plant != null ? s.Plant.Name : s.PlantName,
                 Status = s.Status,
                 Progress = s.Progress,
                 Surveyor = s.Surveyor,
                 Date = s.Date,
                 ProjectId = s.ProjectId,
-                ProjectName = s.Project != null ? s.Project.Name : null
+                ProjectName = s.Project != null ? s.Project.Name : null,
+                PlantId = s.PlantId
             })
             .ToListAsync(cancellationToken);
     }

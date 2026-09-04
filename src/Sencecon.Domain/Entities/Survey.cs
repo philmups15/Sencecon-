@@ -15,5 +15,8 @@ public class Survey : BaseAuditableEntity
     public Guid? ProjectId { get; set; }
     public Project? Project { get; set; }
 
+    public Guid? PlantId { get; set; }
+    public Plant? Plant { get; set; }
+
     public ICollection<Design> Designs { get; set; } = new List<Design>();
 }

@@ -17,5 +17,12 @@ public class BomItemConfiguration : IEntityTypeConfiguration<BomItem>
 
         builder.Property(b => b.UnitCost)
             .HasColumnType("numeric(18,2)");
+
+        builder.HasOne(b => b.Plant)
+            .WithMany(p => p.BomItems)
+            .HasForeignKey(b => b.PlantId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasIndex(b => b.PlantId);
     }
 }

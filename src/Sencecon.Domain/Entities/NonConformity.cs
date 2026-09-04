@@ -9,4 +9,7 @@ public class NonConformity : BaseAuditableEntity
     public string Description { get; set; } = string.Empty;
     public string PlantName { get; set; } = string.Empty;
     public NonConformityStatus Status { get; set; }
+
+    public Guid? PlantId { get; set; }
+    public Plant? Plant { get; set; }
 }

@@ -6,10 +6,6 @@ public class CreateDesignCommandValidator : AbstractValidator<CreateDesignComman
 {
     public CreateDesignCommandValidator()
     {
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.ProjectName)
             .NotEmpty()
             .MaximumLength(200);

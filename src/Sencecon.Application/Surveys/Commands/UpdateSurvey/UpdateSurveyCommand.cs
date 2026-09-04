@@ -16,6 +16,7 @@ public record UpdateSurveyCommand : IRequest
     public string Surveyor { get; init; } = string.Empty;
     public DateTimeOffset Date { get; init; }
     public Guid? ProjectId { get; init; }
+    public Guid? PlantId { get; init; }
 }
 
 public class UpdateSurveyCommandHandler : IRequestHandler<UpdateSurveyCommand>
@@ -48,6 +49,17 @@ public class UpdateSurveyCommandHandler : IRequestHandler<UpdateSurveyCommand>
             }
         }
 
+        if (request.PlantId.HasValue)
+        {
+            var plantExists = await _context.Plants
+                .AnyAsync(p => p.Id == request.PlantId.Value, cancellationToken);
+
+            if (!plantExists)
+            {
+                throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId.Value);
+            }
+        }
+
         entity.Code = request.Code;
         entity.PlantName = request.PlantName;
         entity.Status = request.Status;
@@ -55,6 +67,7 @@ public class UpdateSurveyCommandHandler : IRequestHandler<UpdateSurveyCommand>
         entity.Surveyor = request.Surveyor;
         entity.Date = request.Date;
         entity.ProjectId = request.ProjectId;
+        entity.PlantId = request.PlantId;
         entity.LastModified = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);

@@ -8,6 +8,8 @@ public interface IApplicationDbContext
     DbSet<TodoItem> TodoItems { get; }
     DbSet<User> Users { get; }
     DbSet<Plant> Plants { get; }
+    DbSet<PlantAttachment> PlantAttachments { get; }
+    DbSet<CommissioningTestResult> CommissioningTestResults { get; }
     DbSet<WorkOrder> WorkOrders { get; }
     DbSet<Project> Projects { get; }
     DbSet<Opportunity> Opportunities { get; }
