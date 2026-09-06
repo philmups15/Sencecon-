@@ -24,6 +24,7 @@ public class GetBomItemByIdQueryHandler : IRequestHandler<GetBomItemByIdQuery, B
     {
         var entity = await _context.BomItems
             .Include(b => b.Plant)
+            .Include(b => b.Project)
             .FirstOrDefaultAsync(b => b.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -35,12 +36,15 @@ public class GetBomItemByIdQueryHandler : IRequestHandler<GetBomItemByIdQuery, B
         {
             Id = entity.Id,
             Component = entity.Component,
+            Category = entity.Category,
             Quantity = entity.Quantity,
             UnitCost = entity.UnitCost,
             Supplier = entity.Supplier,
             Status = entity.Status,
             PlantId = entity.PlantId,
             PlantName = entity.Plant?.Name,
+            ProjectId = entity.ProjectId,
+            ProjectName = entity.Project?.Name,
             Created = entity.Created
         };
     }

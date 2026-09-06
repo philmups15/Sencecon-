@@ -10,6 +10,8 @@ public class CreateBomItemCommandValidator : AbstractValidator<CreateBomItemComm
             .NotEmpty()
             .MaximumLength(200);
 
+        RuleFor(v => v.Category).IsInEnum();
+
         RuleFor(v => v.Quantity)
             .GreaterThan(0);
 
