@@ -210,7 +210,7 @@ public class PlantsController : ControllerBase
     [Authorize(Policy = "plants-write")]
     [Consumes("multipart/form-data")]
     [RequestSizeLimit(12_000_000)]
-    public async Task<IActionResult> UploadHandoverCertificate(Guid id, [FromForm] IFormFile file)
+    public async Task<IActionResult> UploadHandoverCertificate(Guid id, IFormFile file)
     {
         using var stream = new MemoryStream();
         await file.CopyToAsync(stream);
