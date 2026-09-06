@@ -28,6 +28,7 @@ public class GetWorkOrdersQueryHandler : IRequestHandler<GetWorkOrdersQuery, IRe
                 Priority = w.Priority,
                 Assignee = w.Assignee,
                 Status = w.Status,
+                DueDate = w.DueDate,
                 PlantId = w.PlantId,
                 PlantName = w.Plant!.Name,
                 Created = w.Created

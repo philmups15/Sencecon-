@@ -6,6 +6,8 @@ using Sencecon.Application.Plants.Commands.DeletePlant;
 using Sencecon.Application.Plants.Commands.RecordCommissioningTestResult;
 using Sencecon.Application.Plants.Commands.UpdatePlant;
 using Sencecon.Application.Plants.Commands.UploadPlantAttachments;
+using Sencecon.Application.Plants.Handover;
+using Sencecon.Application.Plants.Queries.GetCommissioningChecklist;
 using Sencecon.Application.Plants.Queries.GetCommissioningTestResults;
 using Sencecon.Application.Plants.Queries.GetPlantAttachment;
 using Sencecon.Application.Plants.Queries.GetPlantAttachments;
@@ -155,6 +157,15 @@ public class PlantsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("{id:guid}/commissioning-checklist")]
+    [Authorize(Policy = "plants-read")]
+    [ProducesResponseType(typeof(IReadOnlyList<CommissioningChecklistRowDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IReadOnlyList<CommissioningChecklistRowDto>>> GetCommissioningChecklist(Guid id)
+    {
+        var result = await _sender.Send(new GetCommissioningChecklistQuery { PlantId = id });
+        return Ok(result);
+    }
+
     [HttpPut("{id:guid}/commissioning-tests")]
     [Authorize(Policy = "plants-write")]
     [ProducesResponseType(typeof(CommissioningTestResultDto), StatusCodes.Status200OK)]
@@ -171,7 +182,58 @@ public class PlantsController : ControllerBase
 
         return Ok(result);
     }
+
+    // ---- Handover ----
+    [HttpGet("{id:guid}/handover")]
+    [Authorize(Policy = "plants-read")]
+    [ProducesResponseType(typeof(HandoverDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<HandoverDto>> GetHandover(Guid id)
+        => Ok(await _sender.Send(new GetHandoverQuery { PlantId = id }));
+
+    [HttpPut("{id:guid}/handover")]
+    [Authorize(Policy = "plants-write")]
+    public async Task<IActionResult> UpsertHandover(Guid id, UpsertHandoverRequest request)
+    {
+        await _sender.Send(new UpsertHandoverCommand { PlantId = id, AcceptanceDate = request.AcceptanceDate, Notes = request.Notes });
+        return NoContent();
+    }
+
+    [HttpPost("{id:guid}/handover/sign-off")]
+    [Authorize(Policy = "plants-write")]
+    public async Task<IActionResult> SignOffHandover(Guid id)
+    {
+        await _sender.Send(new SignOffHandoverCommand { PlantId = id });
+        return NoContent();
+    }
+
+    [HttpPost("{id:guid}/handover/certificate")]
+    [Authorize(Policy = "plants-write")]
+    [Consumes("multipart/form-data")]
+    [RequestSizeLimit(12_000_000)]
+    public async Task<IActionResult> UploadHandoverCertificate(Guid id, [FromForm] IFormFile file)
+    {
+        using var stream = new MemoryStream();
+        await file.CopyToAsync(stream);
+        await _sender.Send(new UploadHandoverCertificateCommand
+        {
+            PlantId = id,
+            FileName = file.FileName,
+            ContentType = string.IsNullOrWhiteSpace(file.ContentType) ? "application/octet-stream" : file.ContentType,
+            Content = stream.ToArray()
+        });
+        return NoContent();
+    }
+
+    [HttpGet("{id:guid}/handover/certificate")]
+    [Authorize(Policy = "plants-read")]
+    public async Task<IActionResult> DownloadHandoverCertificate(Guid id)
+    {
+        var result = await _sender.Send(new GetHandoverCertificateQuery { PlantId = id });
+        return File(result.Content, result.ContentType, result.FileName);
+    }
 }
+
+public record UpsertHandoverRequest(DateTimeOffset? AcceptanceDate, string? Notes);
 
 public record CreatePlantRequest(string Name, LifecycleStage Stage, PlantType Type, string Capacity, string Equipment, double? PerformanceRatio, double? Latitude, double? Longitude, PlantHealth Health, Guid? ProjectId);
 

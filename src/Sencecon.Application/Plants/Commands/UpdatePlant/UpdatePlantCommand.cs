@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Sencecon.Application.Common;
 using Sencecon.Application.Common.Interfaces;
 using Sencecon.Domain.Enums;
 using Sencecon.Domain.Exceptions;
@@ -49,6 +50,20 @@ public class UpdatePlantCommandHandler : IRequestHandler<UpdatePlantCommand>
             {
                 throw new NotFoundException(nameof(Domain.Entities.Project), request.ProjectId.Value);
             }
+        }
+
+        // Handover gate: a plant can only move to Operating once every applicable
+        // commissioning test has passed and the handover has been signed off.
+        if (request.Stage == LifecycleStage.Operating && entity.Stage != LifecycleStage.Operating)
+        {
+            var (complete, missing) = await CommissioningCompletion.EvaluateAsync(_context, entity.Id, entity.Type, cancellationToken);
+            if (!complete)
+                throw new ConflictException($"Cannot move plant to Operating — outstanding commissioning tests: {string.Join(", ", missing)}.");
+
+            var signedOff = await _context.Handovers
+                .AnyAsync(h => h.PlantId == entity.Id && h.Status == HandoverStatus.SignedOff, cancellationToken);
+            if (!signedOff)
+                throw new ConflictException("Cannot move plant to Operating — the handover has not been signed off.");
         }
 
         entity.Name = request.Name;

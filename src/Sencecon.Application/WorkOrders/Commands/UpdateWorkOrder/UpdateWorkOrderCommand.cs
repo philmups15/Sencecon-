@@ -14,6 +14,7 @@ public record UpdateWorkOrderCommand : IRequest
     public Priority Priority { get; init; }
     public string Assignee { get; init; } = string.Empty;
     public WorkOrderStatus Status { get; init; }
+    public DateTimeOffset? DueDate { get; init; }
     public required Guid PlantId { get; init; }
 }
 
@@ -29,19 +30,26 @@ public class UpdateWorkOrderCommandHandler : IRequestHandler<UpdateWorkOrderComm
     public async Task Handle(UpdateWorkOrderCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.WorkOrders
-            .FirstOrDefaultAsync(w => w.Id == request.Id, cancellationToken);
+            .FirstOrDefaultAsync(w => w.Id == request.Id, cancellationToken)
+            ?? throw new NotFoundException(nameof(Domain.Entities.WorkOrder), request.Id);
 
-        if (entity is null)
-        {
-            throw new NotFoundException(nameof(Domain.Entities.WorkOrder), request.Id);
-        }
-
-        var plantExists = await _context.Plants
-            .AnyAsync(p => p.Id == request.PlantId, cancellationToken);
-
-        if (!plantExists)
-        {
+        if (!await _context.Plants.AnyAsync(p => p.Id == request.PlantId, cancellationToken))
             throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId);
+
+        // Sign-off gate: a work order with a checklist can only close once every
+        // item is ticked.
+        if (request.Status == WorkOrderStatus.Done && entity.Status != WorkOrderStatus.Done)
+        {
+            var checklist = await _context.WorkOrderChecklistItems
+                .Where(c => c.WorkOrderId == entity.Id)
+                .Select(c => c.IsDone)
+                .ToListAsync(cancellationToken);
+
+            if (checklist.Count > 0 && checklist.Any(done => !done))
+            {
+                var outstanding = checklist.Count(done => !done);
+                throw new ConflictException($"Cannot close this work order — {outstanding} checklist item(s) are not complete.");
+            }
         }
 
         entity.Title = request.Title;
@@ -49,6 +57,7 @@ public class UpdateWorkOrderCommandHandler : IRequestHandler<UpdateWorkOrderComm
         entity.Priority = request.Priority;
         entity.Assignee = request.Assignee;
         entity.Status = request.Status;
+        entity.DueDate = request.DueDate;
         entity.PlantId = request.PlantId;
         entity.LastModified = DateTimeOffset.UtcNow;
 

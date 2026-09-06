@@ -19,6 +19,8 @@ public class Plant : BaseAuditableEntity
     public Guid? ProjectId { get; set; }
     public Project? Project { get; set; }
 
+    public Handover? Handover { get; set; }
+
     public ICollection<WorkOrder> WorkOrders { get; set; } = new List<WorkOrder>();
     public ICollection<PlantAttachment> Attachments { get; set; } = new List<PlantAttachment>();
     public ICollection<CommissioningTestResult> CommissioningTests { get; set; } = new List<CommissioningTestResult>();

@@ -11,9 +11,15 @@ public interface IApplicationDbContext
     DbSet<TodoItem> TodoItems { get; }
     DbSet<User> Users { get; }
     DbSet<Plant> Plants { get; }
+    DbSet<Handover> Handovers { get; }
     DbSet<PlantAttachment> PlantAttachments { get; }
     DbSet<CommissioningTestResult> CommissioningTestResults { get; }
+    DbSet<CommissioningTestTemplate> CommissioningTestTemplates { get; }
     DbSet<WorkOrder> WorkOrders { get; }
+    DbSet<WorkOrderChecklistItem> WorkOrderChecklistItems { get; }
+    DbSet<WorkOrderPart> WorkOrderParts { get; }
+    DbSet<WorkOrderLabour> WorkOrderLabour { get; }
+    DbSet<WorkOrderAttachment> WorkOrderAttachments { get; }
     DbSet<Project> Projects { get; }
     DbSet<ProjectMilestone> ProjectMilestones { get; }
     DbSet<ProjectTask> ProjectTasks { get; }
