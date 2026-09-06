@@ -16,6 +16,8 @@ public record UpdateProjectCommand : IRequest
     public string ProjectManager { get; init; } = string.Empty;
     public decimal Budget { get; init; }
     public decimal Actual { get; init; }
+    public DateTimeOffset? ScheduledStartDate { get; init; }
+    public DateTimeOffset? ScheduledEndDate { get; init; }
 }
 
 public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand>
@@ -44,6 +46,8 @@ public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand>
         entity.ProjectManager = request.ProjectManager;
         entity.Budget = request.Budget;
         entity.Actual = request.Actual;
+        entity.ScheduledStartDate = request.ScheduledStartDate;
+        entity.ScheduledEndDate = request.ScheduledEndDate;
         entity.LastModified = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);

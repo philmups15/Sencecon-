@@ -14,6 +14,8 @@ public record CreateProjectCommand : IRequest<Guid>
     public string ProjectManager { get; init; } = string.Empty;
     public decimal Budget { get; init; }
     public decimal Actual { get; init; }
+    public DateTimeOffset? ScheduledStartDate { get; init; }
+    public DateTimeOffset? ScheduledEndDate { get; init; }
 }
 
 public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, Guid>
@@ -38,6 +40,8 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
             ProjectManager = request.ProjectManager,
             Budget = request.Budget,
             Actual = request.Actual,
+            ScheduledStartDate = request.ScheduledStartDate,
+            ScheduledEndDate = request.ScheduledEndDate,
             Created = DateTimeOffset.UtcNow
         };
 

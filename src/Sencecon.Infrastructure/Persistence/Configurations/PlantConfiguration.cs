@@ -25,6 +25,9 @@ public class PlantConfiguration : IEntityTypeConfiguration<Plant>
         builder.Property(p => p.Equipment)
             .HasMaxLength(200);
 
+        builder.Property(p => p.IsActive)
+            .HasDefaultValue(true);
+
         builder.HasOne(p => p.Project)
             .WithMany(pr => pr.Plants)
             .HasForeignKey(p => p.ProjectId)

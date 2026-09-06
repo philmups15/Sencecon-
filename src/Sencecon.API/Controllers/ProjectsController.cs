@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sencecon.Application.Projects.Commands.CreateProject;
-using Sencecon.Application.Projects.Commands.DeleteProject;
+using Sencecon.Application.Projects.Commands.SetProjectActive;
 using Sencecon.Application.Projects.Commands.ProjectChildren;
 using Sencecon.Application.Projects.Commands.UpdateProject;
 using Sencecon.Application.Projects.Queries.GetProjectById;
@@ -26,9 +26,9 @@ public class ProjectsController : ControllerBase
     [HttpGet]
     [Authorize(Policy = "projects-read")]
     [ProducesResponseType(typeof(IReadOnlyList<ProjectDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IReadOnlyList<ProjectDto>>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<ProjectDto>>> GetAll([FromQuery] bool includeInactive = false)
     {
-        var result = await _sender.Send(new GetProjectsQuery());
+        var result = await _sender.Send(new GetProjectsQuery { IncludeInactive = includeInactive });
         return Ok(result);
     }
 
@@ -53,7 +53,9 @@ public class ProjectsController : ControllerBase
             Stage = request.Stage,
             ProjectManager = request.ProjectManager,
             Budget = request.Budget,
-            Actual = request.Actual
+            Actual = request.Actual,
+            ScheduledStartDate = request.ScheduledStartDate,
+            ScheduledEndDate = request.ScheduledEndDate
         });
 
         return CreatedAtAction(nameof(GetById), new { id }, id);
@@ -73,18 +75,30 @@ public class ProjectsController : ControllerBase
             Stage = request.Stage,
             ProjectManager = request.ProjectManager,
             Budget = request.Budget,
-            Actual = request.Actual
+            Actual = request.Actual,
+            ScheduledStartDate = request.ScheduledStartDate,
+            ScheduledEndDate = request.ScheduledEndDate
         });
 
         return NoContent();
     }
 
+    // Soft-delete: deactivate (cascades to the project's plants).
     [HttpDelete("{id:guid}")]
     [Authorize(Policy = "projects-write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _sender.Send(new DeleteProjectCommand { Id = id });
+        await _sender.Send(new SetProjectActiveCommand { Id = id, Active = false });
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}/active")]
+    [Authorize(Policy = "projects-write")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> SetActive(Guid id, SetActiveRequest request)
+    {
+        await _sender.Send(new SetProjectActiveCommand { Id = id, Active = request.Active });
         return NoContent();
     }
 
@@ -199,9 +213,11 @@ public class ProjectsController : ControllerBase
     }
 }
 
-public record CreateProjectRequest(string Name, string Customer, LifecycleStage Stage, string ProjectManager, decimal Budget, decimal Actual);
+public record CreateProjectRequest(string Name, string Customer, LifecycleStage Stage, string ProjectManager, decimal Budget, decimal Actual, DateTimeOffset? ScheduledStartDate, DateTimeOffset? ScheduledEndDate);
 
-public record UpdateProjectRequest(string Code, string Name, string Customer, LifecycleStage Stage, string ProjectManager, decimal Budget, decimal Actual);
+public record UpdateProjectRequest(string Code, string Name, string Customer, LifecycleStage Stage, string ProjectManager, decimal Budget, decimal Actual, DateTimeOffset? ScheduledStartDate, DateTimeOffset? ScheduledEndDate);
+
+public record SetActiveRequest(bool Active);
 
 public record MilestoneRequest(string Label, MilestoneState State, int Order);
 public record ProjectTaskRequest(string Name, string Owner, DateTimeOffset? DueDate, ProjectTaskStatus Status);

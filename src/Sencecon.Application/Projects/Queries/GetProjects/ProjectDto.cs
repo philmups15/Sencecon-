@@ -13,6 +13,9 @@ public record ProjectDto
     public string ProjectManager { get; init; } = string.Empty;
     public decimal Budget { get; init; }
     public decimal Actual { get; init; }
+    public bool IsActive { get; init; } = true;
+    public DateTimeOffset? ScheduledStartDate { get; init; }
+    public DateTimeOffset? ScheduledEndDate { get; init; }
     public DateTimeOffset Created { get; init; }
 
     // Populated by GetProjectByIdQuery only.

@@ -64,6 +64,7 @@ public class GetDashboardQueryHandler : IRequestHandler<GetDashboardQuery, Dashb
         var now = DateTimeOffset.UtcNow;
 
         var plants = await _context.Plants
+            .Where(p => p.IsActive)
             .Select(p => new { p.Id, p.Name, p.Stage, p.Health, p.PerformanceRatio, p.Latitude, p.Longitude })
             .ToListAsync(cancellationToken);
 

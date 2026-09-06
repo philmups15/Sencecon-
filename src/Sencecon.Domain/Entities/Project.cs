@@ -13,6 +13,10 @@ public class Project : BaseAuditableEntity
     public decimal Budget { get; set; }
     public decimal Actual { get; set; }
 
+    public bool IsActive { get; set; } = true;
+    public DateTimeOffset? ScheduledStartDate { get; set; }
+    public DateTimeOffset? ScheduledEndDate { get; set; }
+
     public ICollection<Survey> Surveys { get; set; } = new List<Survey>();
     public ICollection<Plant> Plants { get; set; } = new List<Plant>();
     public ICollection<Design> Designs { get; set; } = new List<Design>();

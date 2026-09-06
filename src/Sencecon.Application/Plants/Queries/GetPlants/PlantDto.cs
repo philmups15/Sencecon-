@@ -15,6 +15,7 @@ public record PlantDto
     public double? Latitude { get; init; }
     public double? Longitude { get; init; }
     public PlantHealth Health { get; init; }
+    public bool IsActive { get; init; } = true;
     public Guid? ProjectId { get; init; }
     public string? ProjectName { get; init; }
     public DateTimeOffset Created { get; init; }

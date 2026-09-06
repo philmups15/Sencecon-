@@ -3,23 +3,25 @@ using Microsoft.EntityFrameworkCore;
 using Sencecon.Application.Common.Interfaces;
 using Sencecon.Domain.Exceptions;
 
-namespace Sencecon.Application.Plants.Commands.DeletePlant;
+namespace Sencecon.Application.Plants.Commands.SetPlantActive;
 
-public record DeletePlantCommand : IRequest
+// Soft-delete: plants are deactivated, never removed.
+public record SetPlantActiveCommand : IRequest
 {
     public required Guid Id { get; init; }
+    public required bool Active { get; init; }
 }
 
-public class DeletePlantCommandHandler : IRequestHandler<DeletePlantCommand>
+public class SetPlantActiveCommandHandler : IRequestHandler<SetPlantActiveCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    public DeletePlantCommandHandler(IApplicationDbContext context)
+    public SetPlantActiveCommandHandler(IApplicationDbContext context)
     {
         _context = context;
     }
 
-    public async Task Handle(DeletePlantCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SetPlantActiveCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Plants
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
@@ -29,7 +31,8 @@ public class DeletePlantCommandHandler : IRequestHandler<DeletePlantCommand>
             throw new NotFoundException(nameof(Domain.Entities.Plant), request.Id);
         }
 
-        _context.Plants.Remove(entity);
+        entity.IsActive = request.Active;
+        entity.LastModified = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
     }

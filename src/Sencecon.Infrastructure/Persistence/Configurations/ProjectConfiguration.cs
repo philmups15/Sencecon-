@@ -30,5 +30,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
 
         builder.Property(p => p.Actual)
             .HasColumnType("numeric(18,2)");
+
+        builder.Property(p => p.IsActive)
+            .HasDefaultValue(true);
     }
 }

@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sencecon.Application.Plants.Commands.CreatePlant;
-using Sencecon.Application.Plants.Commands.DeletePlant;
+using Sencecon.Application.Plants.Commands.SetPlantActive;
 using Sencecon.Application.Plants.Commands.RecordCommissioningTestResult;
 using Sencecon.Application.Plants.Commands.UpdatePlant;
 using Sencecon.Application.Plants.Commands.UploadPlantAttachments;
@@ -32,9 +32,9 @@ public class PlantsController : ControllerBase
     [HttpGet]
     [Authorize(Policy = "plants-read")]
     [ProducesResponseType(typeof(IReadOnlyList<PlantDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IReadOnlyList<PlantDto>>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<PlantDto>>> GetAll([FromQuery] bool includeInactive = false)
     {
-        var result = await _sender.Send(new GetPlantsQuery());
+        var result = await _sender.Send(new GetPlantsQuery { IncludeInactive = includeInactive });
         return Ok(result);
     }
 
@@ -92,12 +92,22 @@ public class PlantsController : ControllerBase
         return NoContent();
     }
 
+    // Soft-delete: deactivate, never remove.
     [HttpDelete("{id:guid}")]
     [Authorize(Policy = "plants-write")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _sender.Send(new DeletePlantCommand { Id = id });
+        await _sender.Send(new SetPlantActiveCommand { Id = id, Active = false });
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}/active")]
+    [Authorize(Policy = "plants-write")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> SetActive(Guid id, SetPlantActiveRequest request)
+    {
+        await _sender.Send(new SetPlantActiveCommand { Id = id, Active = request.Active });
         return NoContent();
     }
 
@@ -240,3 +250,5 @@ public record CreatePlantRequest(string Name, LifecycleStage Stage, PlantType Ty
 public record UpdatePlantRequest(string Name, LifecycleStage Stage, PlantType Type, string Capacity, string Equipment, double? PerformanceRatio, double? Latitude, double? Longitude, PlantHealth Health, Guid? ProjectId);
 
 public record RecordCommissioningTestRequest(CommissioningTestCategory Category, string TestName, CommissioningResultStatus Result, string? Notes);
+
+public record SetPlantActiveRequest(bool Active);

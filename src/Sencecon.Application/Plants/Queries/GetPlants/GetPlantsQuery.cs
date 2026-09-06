@@ -4,7 +4,10 @@ using Sencecon.Application.Common.Interfaces;
 
 namespace Sencecon.Application.Plants.Queries.GetPlants;
 
-public record GetPlantsQuery : IRequest<IReadOnlyList<PlantDto>>;
+public record GetPlantsQuery : IRequest<IReadOnlyList<PlantDto>>
+{
+    public bool IncludeInactive { get; init; }
+}
 
 public class GetPlantsQueryHandler : IRequestHandler<GetPlantsQuery, IReadOnlyList<PlantDto>>
 {
@@ -18,6 +21,7 @@ public class GetPlantsQueryHandler : IRequestHandler<GetPlantsQuery, IReadOnlyLi
     public async Task<IReadOnlyList<PlantDto>> Handle(GetPlantsQuery request, CancellationToken cancellationToken)
     {
         return await _context.Plants
+            .Where(p => request.IncludeInactive || p.IsActive)
             .OrderBy(p => p.Code)
             .Select(p => new PlantDto
             {
@@ -32,6 +36,7 @@ public class GetPlantsQueryHandler : IRequestHandler<GetPlantsQuery, IReadOnlyLi
                 Latitude = p.Latitude,
                 Longitude = p.Longitude,
                 Health = p.Health,
+                IsActive = p.IsActive,
                 ProjectId = p.ProjectId,
                 ProjectName = p.Project != null ? p.Project.Name : null,
                 Created = p.Created

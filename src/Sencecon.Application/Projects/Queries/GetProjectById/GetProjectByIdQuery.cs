@@ -45,6 +45,9 @@ public class GetProjectByIdQueryHandler : IRequestHandler<GetProjectByIdQuery, P
             ProjectManager = entity.ProjectManager,
             Budget = entity.Budget,
             Actual = entity.Actual,
+            IsActive = entity.IsActive,
+            ScheduledStartDate = entity.ScheduledStartDate,
+            ScheduledEndDate = entity.ScheduledEndDate,
             Created = entity.Created,
             Milestones = entity.Milestones.OrderBy(m => m.Order).ThenBy(m => m.Created)
                 .Select(m => new ProjectMilestoneDto { Id = m.Id, Label = m.Label, State = m.State, Order = m.Order }).ToList(),
