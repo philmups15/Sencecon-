@@ -16,4 +16,11 @@ public class Project : BaseAuditableEntity
     public ICollection<Survey> Surveys { get; set; } = new List<Survey>();
     public ICollection<Plant> Plants { get; set; } = new List<Plant>();
     public ICollection<Design> Designs { get; set; } = new List<Design>();
+    public ICollection<BomItem> BomItems { get; set; } = new List<BomItem>();
+
+    public ICollection<ProjectMilestone> Milestones { get; set; } = new List<ProjectMilestone>();
+    public ICollection<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
+    public ICollection<Subcontractor> Subcontractors { get; set; } = new List<Subcontractor>();
+    public ICollection<ProjectRisk> Risks { get; set; } = new List<ProjectRisk>();
+    public ICollection<ProjectBudgetLine> BudgetLines { get; set; } = new List<ProjectBudgetLine>();
 }

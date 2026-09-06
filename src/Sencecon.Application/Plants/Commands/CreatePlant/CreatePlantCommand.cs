@@ -12,9 +12,12 @@ public record CreatePlantCommand : IRequest<Guid>
 {
     public required string Name { get; init; }
     public LifecycleStage Stage { get; init; }
+    public PlantType Type { get; init; }
     public string Capacity { get; init; } = string.Empty;
     public string Equipment { get; init; } = string.Empty;
     public double? PerformanceRatio { get; init; }
+    public double? Latitude { get; init; }
+    public double? Longitude { get; init; }
     public PlantHealth Health { get; init; }
     public Guid? ProjectId { get; init; }
 }
@@ -41,16 +44,19 @@ public class CreatePlantCommandHandler : IRequestHandler<CreatePlantCommand, Gui
             }
         }
 
-        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Plants.Select(p => p.Code), "PLT-", cancellationToken);
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context, "PLT-", cancellationToken);
 
         var entity = new Plant
         {
             Code = code,
             Name = request.Name,
             Stage = request.Stage,
+            Type = request.Type,
             Capacity = request.Capacity,
             Equipment = request.Equipment,
             PerformanceRatio = request.PerformanceRatio,
+            Latitude = request.Latitude,
+            Longitude = request.Longitude,
             Health = request.Health,
             ProjectId = request.ProjectId,
             Created = DateTimeOffset.UtcNow

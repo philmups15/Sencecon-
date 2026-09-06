@@ -23,6 +23,7 @@ public class GetReportsQueryHandler : IRequestHandler<GetReportsQuery, IReadOnly
             {
                 Id = r.Id,
                 Name = r.Name,
+                Type = r.Type,
                 GeneratedBy = r.GeneratedBy,
                 GeneratedDate = r.GeneratedDate
             })

@@ -54,9 +54,12 @@ public class PlantsController : ControllerBase
         {
             Name = request.Name,
             Stage = request.Stage,
+            Type = request.Type,
             Capacity = request.Capacity,
             Equipment = request.Equipment,
             PerformanceRatio = request.PerformanceRatio,
+            Latitude = request.Latitude,
+            Longitude = request.Longitude,
             Health = request.Health,
             ProjectId = request.ProjectId
         });
@@ -74,9 +77,12 @@ public class PlantsController : ControllerBase
             Id = id,
             Name = request.Name,
             Stage = request.Stage,
+            Type = request.Type,
             Capacity = request.Capacity,
             Equipment = request.Equipment,
             PerformanceRatio = request.PerformanceRatio,
+            Latitude = request.Latitude,
+            Longitude = request.Longitude,
             Health = request.Health,
             ProjectId = request.ProjectId
         });
@@ -167,8 +173,8 @@ public class PlantsController : ControllerBase
     }
 }
 
-public record CreatePlantRequest(string Name, LifecycleStage Stage, string Capacity, string Equipment, double? PerformanceRatio, PlantHealth Health, Guid? ProjectId);
+public record CreatePlantRequest(string Name, LifecycleStage Stage, PlantType Type, string Capacity, string Equipment, double? PerformanceRatio, double? Latitude, double? Longitude, PlantHealth Health, Guid? ProjectId);
 
-public record UpdatePlantRequest(string Name, LifecycleStage Stage, string Capacity, string Equipment, double? PerformanceRatio, PlantHealth Health, Guid? ProjectId);
+public record UpdatePlantRequest(string Name, LifecycleStage Stage, PlantType Type, string Capacity, string Equipment, double? PerformanceRatio, double? Latitude, double? Longitude, PlantHealth Health, Guid? ProjectId);
 
 public record RecordCommissioningTestRequest(CommissioningTestCategory Category, string TestName, CommissioningResultStatus Result, string? Notes);

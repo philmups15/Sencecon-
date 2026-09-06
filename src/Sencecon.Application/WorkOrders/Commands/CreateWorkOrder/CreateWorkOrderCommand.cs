@@ -37,7 +37,7 @@ public class CreateWorkOrderCommandHandler : IRequestHandler<CreateWorkOrderComm
             throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId);
         }
 
-        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.WorkOrders.Select(w => w.Code), "WO-", cancellationToken);
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context, "WO-", cancellationToken);
 
         var entity = new WorkOrder
         {

@@ -50,7 +50,7 @@ public class CreateDesignCommandHandler : IRequestHandler<CreateDesignCommand, G
             }
         }
 
-        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Designs.Select(d => d.Code), "DSN-", cancellationToken);
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context, "DSN-", cancellationToken);
 
         var entity = new Design
         {

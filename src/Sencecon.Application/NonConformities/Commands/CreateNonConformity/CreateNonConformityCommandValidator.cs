@@ -6,10 +6,6 @@ public class CreateNonConformityCommandValidator : AbstractValidator<CreateNonCo
 {
     public CreateNonConformityCommandValidator()
     {
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.Description)
             .NotEmpty()
             .MaximumLength(500);

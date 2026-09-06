@@ -52,7 +52,7 @@ public class CreateSurveyCommandHandler : IRequestHandler<CreateSurveyCommand, G
             }
         }
 
-        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Surveys.Select(s => s.Code), "SUR-", cancellationToken);
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context, "SUR-", cancellationToken);
 
         var entity = new Survey
         {

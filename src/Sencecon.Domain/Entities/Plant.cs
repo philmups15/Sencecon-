@@ -8,9 +8,12 @@ public class Plant : BaseAuditableEntity
     public string Code { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public LifecycleStage Stage { get; set; }
+    public PlantType Type { get; set; } = PlantType.RooftopCommercial;
     public string Capacity { get; set; } = string.Empty;
     public string Equipment { get; set; } = string.Empty;
     public double? PerformanceRatio { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
     public PlantHealth Health { get; set; } = PlantHealth.Unknown;
 
     public Guid? ProjectId { get; set; }

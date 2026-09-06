@@ -23,6 +23,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IDataProte
     public DbSet<CommissioningTestResult> CommissioningTestResults => Set<CommissioningTestResult>();
     public DbSet<WorkOrder> WorkOrders => Set<WorkOrder>();
     public DbSet<Project> Projects => Set<Project>();
+    public DbSet<ProjectMilestone> ProjectMilestones => Set<ProjectMilestone>();
+    public DbSet<ProjectTask> ProjectTasks => Set<ProjectTask>();
+    public DbSet<Subcontractor> Subcontractors => Set<Subcontractor>();
+    public DbSet<ProjectRisk> ProjectRisks => Set<ProjectRisk>();
+    public DbSet<ProjectBudgetLine> ProjectBudgetLines => Set<ProjectBudgetLine>();
     public DbSet<Opportunity> Opportunities => Set<Opportunity>();
     public DbSet<OpportunityAttachment> OpportunityAttachments => Set<OpportunityAttachment>();
     public DbSet<OpportunityNote> OpportunityNotes => Set<OpportunityNote>();
@@ -38,6 +43,15 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IDataProte
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     public DbSet<Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey> DataProtectionKeys => Set<Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey>();
+
+    public async Task<long> NextSequenceValueAsync(string sequenceName, CancellationToken cancellationToken)
+    {
+        var result = await Database
+            .SqlQueryRaw<long>("SELECT nextval({0}) AS \"Value\"", sequenceName)
+            .SingleAsync(cancellationToken);
+
+        return result;
+    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

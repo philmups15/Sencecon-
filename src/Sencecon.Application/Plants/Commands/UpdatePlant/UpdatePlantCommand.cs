@@ -11,9 +11,12 @@ public record UpdatePlantCommand : IRequest
     public required Guid Id { get; init; }
     public required string Name { get; init; }
     public LifecycleStage Stage { get; init; }
+    public PlantType Type { get; init; }
     public string Capacity { get; init; } = string.Empty;
     public string Equipment { get; init; } = string.Empty;
     public double? PerformanceRatio { get; init; }
+    public double? Latitude { get; init; }
+    public double? Longitude { get; init; }
     public PlantHealth Health { get; init; }
     public Guid? ProjectId { get; init; }
 }
@@ -50,9 +53,12 @@ public class UpdatePlantCommandHandler : IRequestHandler<UpdatePlantCommand>
 
         entity.Name = request.Name;
         entity.Stage = request.Stage;
+        entity.Type = request.Type;
         entity.Capacity = request.Capacity;
         entity.Equipment = request.Equipment;
         entity.PerformanceRatio = request.PerformanceRatio;
+        entity.Latitude = request.Latitude;
+        entity.Longitude = request.Longitude;
         entity.Health = request.Health;
         entity.ProjectId = request.ProjectId;
         entity.LastModified = DateTimeOffset.UtcNow;

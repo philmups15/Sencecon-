@@ -5,6 +5,9 @@ namespace Sencecon.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
+    // Atomic counter for human-readable entity codes (see EntityCodeGenerator).
+    Task<long> NextSequenceValueAsync(string sequenceName, CancellationToken cancellationToken);
+
     DbSet<TodoItem> TodoItems { get; }
     DbSet<User> Users { get; }
     DbSet<Plant> Plants { get; }
@@ -12,6 +15,11 @@ public interface IApplicationDbContext
     DbSet<CommissioningTestResult> CommissioningTestResults { get; }
     DbSet<WorkOrder> WorkOrders { get; }
     DbSet<Project> Projects { get; }
+    DbSet<ProjectMilestone> ProjectMilestones { get; }
+    DbSet<ProjectTask> ProjectTasks { get; }
+    DbSet<Subcontractor> Subcontractors { get; }
+    DbSet<ProjectRisk> ProjectRisks { get; }
+    DbSet<ProjectBudgetLine> ProjectBudgetLines { get; }
     DbSet<Opportunity> Opportunities { get; }
     DbSet<OpportunityAttachment> OpportunityAttachments { get; }
     DbSet<OpportunityNote> OpportunityNotes { get; }
