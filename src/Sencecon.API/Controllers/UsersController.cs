@@ -71,8 +71,9 @@ public class UsersController : ControllerBase
 
     [HttpPost("me/avatar")]
     [RequestSizeLimit(6_000_000)]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
-    public async Task<ActionResult<UserDto>> UploadAvatar([FromForm] IFormFile file)
+    public async Task<ActionResult<UserDto>> UploadAvatar(IFormFile file)
     {
         using var stream = new MemoryStream();
         await file.CopyToAsync(stream);
