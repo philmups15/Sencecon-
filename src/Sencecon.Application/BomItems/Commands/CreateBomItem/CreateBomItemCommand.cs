@@ -10,11 +10,13 @@ namespace Sencecon.Application.BomItems.Commands.CreateBomItem;
 public record CreateBomItemCommand : IRequest<Guid>
 {
     public required string Component { get; init; }
+    public BomCategory Category { get; init; }
     public int Quantity { get; init; }
     public decimal UnitCost { get; init; }
     public string Supplier { get; init; } = string.Empty;
     public BomStatus Status { get; init; }
     public Guid? PlantId { get; init; }
+    public Guid? ProjectId { get; init; }
 }
 
 public class CreateBomItemCommandHandler : IRequestHandler<CreateBomItemCommand, Guid>
@@ -28,25 +30,22 @@ public class CreateBomItemCommandHandler : IRequestHandler<CreateBomItemCommand,
 
     public async Task<Guid> Handle(CreateBomItemCommand request, CancellationToken cancellationToken)
     {
-        if (request.PlantId.HasValue)
-        {
-            var plantExists = await _context.Plants
-                .AnyAsync(p => p.Id == request.PlantId.Value, cancellationToken);
+        if (request.PlantId.HasValue && !await _context.Plants.AnyAsync(p => p.Id == request.PlantId.Value, cancellationToken))
+            throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId.Value);
 
-            if (!plantExists)
-            {
-                throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId.Value);
-            }
-        }
+        if (request.ProjectId.HasValue && !await _context.Projects.AnyAsync(p => p.Id == request.ProjectId.Value, cancellationToken))
+            throw new NotFoundException(nameof(Domain.Entities.Project), request.ProjectId.Value);
 
         var entity = new BomItem
         {
             Component = request.Component,
+            Category = request.Category,
             Quantity = request.Quantity,
             UnitCost = request.UnitCost,
             Supplier = request.Supplier,
             Status = request.Status,
             PlantId = request.PlantId,
+            ProjectId = request.ProjectId,
             Created = DateTimeOffset.UtcNow
         };
 

@@ -1,18 +1,18 @@
-using Microsoft.EntityFrameworkCore;
+using Sencecon.Application.Common.Interfaces;
 
 namespace Sencecon.Application.Common;
 
+// Human-readable entity codes (PLT-001, WO-042, ...). Backed by a dedicated
+// Postgres sequence per prefix (created in migration AddCodeSequences), so
+// concurrent creates get distinct numbers without a read-modify-write race.
 public static class EntityCodeGenerator
 {
-    public static async Task<string> GenerateNextCodeAsync(IQueryable<string> codeQuery, string prefix, CancellationToken cancellationToken)
+    private static string SequenceFor(string prefix) => prefix.TrimEnd('-').ToLowerInvariant() + "_code_seq";
+
+    public static async Task<string> GenerateNextCodeAsync(
+        IApplicationDbContext context, string prefix, CancellationToken cancellationToken)
     {
-        var codes = await codeQuery.ToListAsync(cancellationToken);
-
-        var nextNumber = codes
-            .Select(c => c.StartsWith(prefix) && int.TryParse(c.AsSpan(prefix.Length), out var n) ? n : 0)
-            .DefaultIfEmpty(0)
-            .Max() + 1;
-
-        return $"{prefix}{nextNumber:000}";
+        var next = await context.NextSequenceValueAsync(SequenceFor(prefix), cancellationToken);
+        return $"{prefix}{next:000}";
     }
 }

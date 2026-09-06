@@ -24,5 +24,12 @@ public class BomItemConfiguration : IEntityTypeConfiguration<BomItem>
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasIndex(b => b.PlantId);
+
+        builder.HasOne(b => b.Project)
+            .WithMany(p => p.BomItems)
+            .HasForeignKey(b => b.ProjectId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasIndex(b => b.ProjectId);
     }
 }

@@ -47,7 +47,6 @@ public class NonConformitiesController : ControllerBase
     {
         var id = await _sender.Send(new CreateNonConformityCommand
         {
-            Code = request.Code,
             Description = request.Description,
             PlantName = request.PlantName,
             Status = request.Status,
@@ -65,7 +64,6 @@ public class NonConformitiesController : ControllerBase
         await _sender.Send(new UpdateNonConformityCommand
         {
             Id = id,
-            Code = request.Code,
             Description = request.Description,
             PlantName = request.PlantName,
             Status = request.Status,
@@ -85,6 +83,6 @@ public class NonConformitiesController : ControllerBase
     }
 }
 
-public record CreateNonConformityRequest(string Code, string Description, string PlantName, NonConformityStatus Status, Guid? PlantId);
+public record CreateNonConformityRequest(string Description, string PlantName, NonConformityStatus Status, Guid? PlantId);
 
-public record UpdateNonConformityRequest(string Code, string Description, string PlantName, NonConformityStatus Status, Guid? PlantId);
+public record UpdateNonConformityRequest(string Description, string PlantName, NonConformityStatus Status, Guid? PlantId);

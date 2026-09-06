@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sencecon.Application.BomItems.Commands.CreateBomItem;
 using Sencecon.Application.BomItems.Commands.DeleteBomItem;
 using Sencecon.Application.BomItems.Commands.UpdateBomItem;
+using Sencecon.Application.BomItems.Queries.GetBomCostVariance;
 using Sencecon.Application.BomItems.Queries.GetBomItemById;
 using Sencecon.Application.BomItems.Queries.GetBomItems;
 using Sencecon.Domain.Enums;
@@ -40,6 +41,15 @@ public class BomItemsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("cost-variance")]
+    [Authorize(Policy = "bomItems-read")]
+    [ProducesResponseType(typeof(IReadOnlyList<BomCostVarianceRowDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IReadOnlyList<BomCostVarianceRowDto>>> GetCostVariance([FromQuery] Guid projectId)
+    {
+        var result = await _sender.Send(new GetBomCostVarianceQuery { ProjectId = projectId });
+        return Ok(result);
+    }
+
     [HttpPost]
     [Authorize(Policy = "bomItems-write")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
@@ -48,11 +58,13 @@ public class BomItemsController : ControllerBase
         var id = await _sender.Send(new CreateBomItemCommand
         {
             Component = request.Component,
+            Category = request.Category,
             Quantity = request.Quantity,
             UnitCost = request.UnitCost,
             Supplier = request.Supplier,
             Status = request.Status,
-            PlantId = request.PlantId
+            PlantId = request.PlantId,
+            ProjectId = request.ProjectId
         });
 
         return CreatedAtAction(nameof(GetById), new { id }, id);
@@ -67,11 +79,13 @@ public class BomItemsController : ControllerBase
         {
             Id = id,
             Component = request.Component,
+            Category = request.Category,
             Quantity = request.Quantity,
             UnitCost = request.UnitCost,
             Supplier = request.Supplier,
             Status = request.Status,
-            PlantId = request.PlantId
+            PlantId = request.PlantId,
+            ProjectId = request.ProjectId
         });
 
         return NoContent();
@@ -87,6 +101,6 @@ public class BomItemsController : ControllerBase
     }
 }
 
-public record CreateBomItemRequest(string Component, int Quantity, decimal UnitCost, string Supplier, BomStatus Status, Guid? PlantId);
+public record CreateBomItemRequest(string Component, BomCategory Category, int Quantity, decimal UnitCost, string Supplier, BomStatus Status, Guid? PlantId, Guid? ProjectId);
 
-public record UpdateBomItemRequest(string Component, int Quantity, decimal UnitCost, string Supplier, BomStatus Status, Guid? PlantId);
+public record UpdateBomItemRequest(string Component, BomCategory Category, int Quantity, decimal UnitCost, string Supplier, BomStatus Status, Guid? PlantId, Guid? ProjectId);

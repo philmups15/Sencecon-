@@ -76,6 +76,9 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Category")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Component")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -88,6 +91,9 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("PlantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ProjectId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Quantity")
@@ -107,6 +113,8 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PlantId");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("BomItems");
                 });
@@ -152,6 +160,116 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.ToTable("CommissioningTestResults");
                 });
 
+            modelBuilder.Entity("Sencecon.Domain.Entities.CommissioningTestTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.PrimitiveCollection<int[]>("AppliesToTypes")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TestName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Category", "TestName")
+                        .IsUnique();
+
+                    b.ToTable("CommissioningTestTemplates");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("82d70ac0-3b4d-631f-d695-e9cfd1c247b5"),
+                            AppliesToTypes = new int[0],
+                            Category = 0,
+                            Created = new DateTimeOffset(new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            Order = 0,
+                            TestName = "Insulation resistance"
+                        },
+                        new
+                        {
+                            Id = new Guid("f1ef5d53-0878-31fb-f2e5-5f291db3c18d"),
+                            AppliesToTypes = new int[0],
+                            Category = 0,
+                            Created = new DateTimeOffset(new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            Order = 1,
+                            TestName = "Open circuit voltage per string"
+                        },
+                        new
+                        {
+                            Id = new Guid("5207dc49-a230-be84-45b9-25d1395494d6"),
+                            AppliesToTypes = new int[0],
+                            Category = 1,
+                            Created = new DateTimeOffset(new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            Order = 2,
+                            TestName = "Earth loop impedance"
+                        },
+                        new
+                        {
+                            Id = new Guid("48556457-1448-9364-877c-f58906e89939"),
+                            AppliesToTypes = new int[0],
+                            Category = 1,
+                            Created = new DateTimeOffset(new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            Order = 3,
+                            TestName = "RCD trip time"
+                        },
+                        new
+                        {
+                            Id = new Guid("98e15637-5d59-d39f-5f9c-289f8c210da1"),
+                            AppliesToTypes = new int[0],
+                            Category = 2,
+                            Created = new DateTimeOffset(new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            Order = 4,
+                            TestName = "Gateway comms link"
+                        },
+                        new
+                        {
+                            Id = new Guid("fc34bb23-dafe-2452-f6ed-172c42679750"),
+                            AppliesToTypes = new int[0],
+                            Category = 3,
+                            Created = new DateTimeOffset(new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            Order = 5,
+                            TestName = "Arc flash labelling"
+                        },
+                        new
+                        {
+                            Id = new Guid("b625d661-5121-6441-3b3e-b3e35aa14dba"),
+                            AppliesToTypes = new int[0],
+                            Category = 3,
+                            Created = new DateTimeOffset(new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsActive = true,
+                            Order = 6,
+                            TestName = "Lockout/tagout points"
+                        });
+                });
+
             modelBuilder.Entity("Sencecon.Domain.Entities.Design", b =>
                 {
                     b.Property<Guid>("Id")
@@ -182,6 +300,10 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
+                    b.Property<string>("Specs")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -198,6 +320,134 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.HasIndex("SurveyId");
 
                     b.ToTable("Designs");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.DesignAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("DesignId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(260)
+                        .HasColumnType("character varying(260)");
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("UploadedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DesignId");
+
+                    b.ToTable("DesignAttachments");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.DesignRevision", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ChangedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("DesignId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Revision")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DesignId");
+
+                    b.ToTable("DesignRevisions");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.Handover", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("AcceptanceDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<byte[]>("CertificateContent")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("CertificateContentType")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("CertificateFileName")
+                        .HasMaxLength(260)
+                        .HasColumnType("character varying(260)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("PlantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("SignedOffBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("SignedOffDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlantId")
+                        .IsUnique();
+
+                    b.ToTable("Handovers");
                 });
 
             modelBuilder.Entity("Sencecon.Domain.Entities.IntegrationSetting", b =>
@@ -518,6 +768,12 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -530,6 +786,9 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<int>("Stage")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -638,6 +897,151 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("Sencecon.Domain.Entities.ProjectBudgetLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("ActualAmount")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<decimal>("BudgetAmount")
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<int?>("Category")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectBudgetLines");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.ProjectMilestone", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("State")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectMilestones");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.ProjectRisk", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Mitigation")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectRisks");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.ProjectTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Owner")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectTasks");
+                });
+
             modelBuilder.Entity("Sencecon.Domain.Entities.Report", b =>
                 {
                     b.Property<Guid>("Id")
@@ -662,6 +1066,9 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -1111,6 +1518,41 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Sencecon.Domain.Entities.Subcontractor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Scope")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Subcontractors");
+                });
+
             modelBuilder.Entity("Sencecon.Domain.Entities.Survey", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1163,6 +1605,121 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Surveys");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.SurveyMeasurement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Field")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("SurveyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("character varying(400)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SurveyId");
+
+                    b.ToTable("SurveyMeasurements");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.SurveyObstruction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Impact")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("character varying(400)");
+
+                    b.Property<string>("Item")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("SurveyId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SurveyId");
+
+                    b.ToTable("SurveyObstructions");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.SurveyPhoto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(260)
+                        .HasColumnType("character varying(260)");
+
+                    b.Property<string>("Gps")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("SurveyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("UploadedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SurveyId");
+
+                    b.ToTable("SurveyPhotos");
                 });
 
             modelBuilder.Entity("Sencecon.Domain.Entities.TodoItem", b =>
@@ -1290,6 +1847,9 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTimeOffset?>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
@@ -1320,6 +1880,139 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.ToTable("WorkOrders");
                 });
 
+            modelBuilder.Entity("Sencecon.Domain.Entities.WorkOrderAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(260)
+                        .HasColumnType("character varying(260)");
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("UploadedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("WorkOrderId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkOrderId");
+
+                    b.ToTable("WorkOrderAttachments");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.WorkOrderChecklistItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDone")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<Guid>("WorkOrderId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkOrderId");
+
+                    b.ToTable("WorkOrderChecklistItems");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.WorkOrderLabour", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Hours")
+                        .HasColumnType("numeric(9,2)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("PersonName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<DateTimeOffset?>("WorkDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("WorkOrderId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkOrderId");
+
+                    b.ToTable("WorkOrderLabour");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.WorkOrderPart", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("PartName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("WorkOrderId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkOrderId");
+
+                    b.ToTable("WorkOrderParts");
+                });
+
             modelBuilder.Entity("Sencecon.Domain.Entities.AuditLogEntry", b =>
                 {
                     b.HasOne("Sencecon.Domain.Entities.User", "User")
@@ -1337,7 +2030,14 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                         .HasForeignKey("PlantId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Sencecon.Domain.Entities.Project", "Project")
+                        .WithMany("BomItems")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Plant");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Sencecon.Domain.Entities.CommissioningTestResult", b =>
@@ -1366,6 +2066,39 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.Navigation("Project");
 
                     b.Navigation("Survey");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.DesignAttachment", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Design", "Design")
+                        .WithMany("Attachments")
+                        .HasForeignKey("DesignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Design");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.DesignRevision", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Design", "Design")
+                        .WithMany("Revisions")
+                        .HasForeignKey("DesignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Design");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.Handover", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Plant", "Plant")
+                        .WithOne("Handover")
+                        .HasForeignKey("Sencecon.Domain.Entities.Handover", "PlantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Plant");
                 });
 
             modelBuilder.Entity("Sencecon.Domain.Entities.NonConformity", b =>
@@ -1443,6 +2176,61 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.Navigation("Plant");
                 });
 
+            modelBuilder.Entity("Sencecon.Domain.Entities.ProjectBudgetLine", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Project", "Project")
+                        .WithMany("BudgetLines")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.ProjectMilestone", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Project", "Project")
+                        .WithMany("Milestones")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.ProjectRisk", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Project", "Project")
+                        .WithMany("Risks")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.ProjectTask", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Project", "Project")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.Subcontractor", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Project", "Project")
+                        .WithMany("Subcontractors")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("Sencecon.Domain.Entities.Survey", b =>
                 {
                     b.HasOne("Sencecon.Domain.Entities.Plant", "Plant")
@@ -1458,6 +2246,39 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.Navigation("Plant");
 
                     b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.SurveyMeasurement", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Survey", "Survey")
+                        .WithMany("Measurements")
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Survey");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.SurveyObstruction", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Survey", "Survey")
+                        .WithMany("Obstructions")
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Survey");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.SurveyPhoto", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.Survey", "Survey")
+                        .WithMany("Photos")
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Survey");
                 });
 
             modelBuilder.Entity("Sencecon.Domain.Entities.TodoItem", b =>
@@ -1482,6 +2303,57 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.Navigation("Plant");
                 });
 
+            modelBuilder.Entity("Sencecon.Domain.Entities.WorkOrderAttachment", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.WorkOrder", "WorkOrder")
+                        .WithMany("Attachments")
+                        .HasForeignKey("WorkOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkOrder");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.WorkOrderChecklistItem", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.WorkOrder", "WorkOrder")
+                        .WithMany("ChecklistItems")
+                        .HasForeignKey("WorkOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkOrder");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.WorkOrderLabour", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.WorkOrder", "WorkOrder")
+                        .WithMany("Labour")
+                        .HasForeignKey("WorkOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkOrder");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.WorkOrderPart", b =>
+                {
+                    b.HasOne("Sencecon.Domain.Entities.WorkOrder", "WorkOrder")
+                        .WithMany("Parts")
+                        .HasForeignKey("WorkOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkOrder");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.Design", b =>
+                {
+                    b.Navigation("Attachments");
+
+                    b.Navigation("Revisions");
+                });
+
             modelBuilder.Entity("Sencecon.Domain.Entities.Opportunity", b =>
                 {
                     b.Navigation("Activity");
@@ -1499,6 +2371,8 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
 
                     b.Navigation("CommissioningTests");
 
+                    b.Navigation("Handover");
+
                     b.Navigation("NonConformities");
 
                     b.Navigation("Surveys");
@@ -1508,16 +2382,34 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Sencecon.Domain.Entities.Project", b =>
                 {
+                    b.Navigation("BomItems");
+
+                    b.Navigation("BudgetLines");
+
                     b.Navigation("Designs");
+
+                    b.Navigation("Milestones");
 
                     b.Navigation("Plants");
 
+                    b.Navigation("Risks");
+
+                    b.Navigation("Subcontractors");
+
                     b.Navigation("Surveys");
+
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("Sencecon.Domain.Entities.Survey", b =>
                 {
                     b.Navigation("Designs");
+
+                    b.Navigation("Measurements");
+
+                    b.Navigation("Obstructions");
+
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("Sencecon.Domain.Entities.User", b =>
@@ -1527,6 +2419,17 @@ namespace Sencecon.Infrastructure.Persistence.Migrations
                     b.Navigation("PasswordResetTokens");
 
                     b.Navigation("TodoItems");
+                });
+
+            modelBuilder.Entity("Sencecon.Domain.Entities.WorkOrder", b =>
+                {
+                    b.Navigation("Attachments");
+
+                    b.Navigation("ChecklistItems");
+
+                    b.Navigation("Labour");
+
+                    b.Navigation("Parts");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,7 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sencecon.Application.Designs.Commands.CreateDesign;
 using Sencecon.Application.Designs.Commands.DeleteDesign;
+using Sencecon.Application.Designs.Commands.DesignRevisionSpecs;
 using Sencecon.Application.Designs.Commands.UpdateDesign;
+using Sencecon.Application.Designs.Commands.UploadDesignAttachments;
+using Sencecon.Application.Designs.Queries.GetDesignAttachment;
+using Sencecon.Application.Designs.Queries.GetDesignAttachments;
 using Sencecon.Application.Designs.Queries.GetDesignById;
 using Sencecon.Application.Designs.Queries.GetDesigns;
 using Sencecon.Domain.Enums;
@@ -83,7 +87,57 @@ public class DesignsController : ControllerBase
         await _sender.Send(new DeleteDesignCommand { Id = id });
         return NoContent();
     }
+
+    [HttpGet("{id:guid}/attachments")]
+    [Authorize(Policy = "designs-read")]
+    public async Task<ActionResult<IReadOnlyList<DesignAttachmentDto>>> GetAttachments(Guid id)
+        => Ok(await _sender.Send(new GetDesignAttachmentsQuery { DesignId = id }));
+
+    [HttpPost("{id:guid}/attachments")]
+    [Authorize(Policy = "designs-write")]
+    [Consumes("multipart/form-data")]
+    [RequestSizeLimit(60_000_000)]
+    public async Task<ActionResult<IReadOnlyList<DesignAttachmentDto>>> UploadAttachments(Guid id, [FromForm] IFormFileCollection files, [FromForm] string? title)
+    {
+        var attachmentFiles = new List<DesignAttachmentFile>();
+        foreach (var file in files)
+        {
+            using var stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+            attachmentFiles.Add(new DesignAttachmentFile
+            {
+                FileName = file.FileName,
+                ContentType = string.IsNullOrWhiteSpace(file.ContentType) ? "application/octet-stream" : file.ContentType,
+                Content = stream.ToArray()
+            });
+        }
+        return Ok(await _sender.Send(new UploadDesignAttachmentsCommand { DesignId = id, Files = attachmentFiles, Title = title }));
+    }
+
+    [HttpGet("{id:guid}/attachments/{attachmentId:guid}")]
+    [Authorize(Policy = "designs-read")]
+    public async Task<IActionResult> DownloadAttachment(Guid id, Guid attachmentId)
+    {
+        var result = await _sender.Send(new GetDesignAttachmentQuery { DesignId = id, AttachmentId = attachmentId });
+        return File(result.Content, result.ContentType, result.FileName);
+    }
+
+    [HttpPost("{id:guid}/revisions")]
+    [Authorize(Policy = "designs-write")]
+    public async Task<ActionResult<Guid>> AddRevision(Guid id, AddDesignRevisionRequest request)
+        => await _sender.Send(new AddDesignRevisionCommand { DesignId = id, Revision = request.Revision, Note = request.Note });
+
+    [HttpPut("{id:guid}/specs/{tab}")]
+    [Authorize(Policy = "designs-write")]
+    public async Task<IActionResult> UpdateSpecs(Guid id, string tab, UpdateDesignSpecsRequest request)
+    {
+        await _sender.Send(new UpdateDesignSpecsCommand { DesignId = id, Tab = tab, Fields = request.Fields });
+        return NoContent();
+    }
 }
+
+public record AddDesignRevisionRequest(string Revision, string? Note);
+public record UpdateDesignSpecsRequest(Dictionary<string, string> Fields);
 
 public record CreateDesignRequest(string ProjectName, DesignStatus Status, string Revision, Guid? SurveyId, Guid? ProjectId);
 

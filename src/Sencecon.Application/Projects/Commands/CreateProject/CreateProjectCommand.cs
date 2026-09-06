@@ -27,7 +27,7 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
 
     public async Task<Guid> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
     {
-        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Projects.Select(p => p.Code), "PRJ-", cancellationToken);
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context, "PRJ-", cancellationToken);
 
         var entity = new Project
         {

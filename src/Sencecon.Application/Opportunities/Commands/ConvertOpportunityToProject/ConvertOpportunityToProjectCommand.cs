@@ -44,7 +44,7 @@ public class ConvertOpportunityToProjectCommandHandler : IRequestHandler<Convert
             throw new ConflictException("This opportunity has already been converted to a project.");
         }
 
-        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Projects.Select(p => p.Code), "PRJ-", cancellationToken);
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context, "PRJ-", cancellationToken);
 
         var project = new Project
         {
@@ -60,7 +60,7 @@ public class ConvertOpportunityToProjectCommandHandler : IRequestHandler<Convert
 
         _context.Projects.Add(project);
 
-        var plantCode = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Plants.Select(p => p.Code), "PLT-", cancellationToken);
+        var plantCode = await EntityCodeGenerator.GenerateNextCodeAsync(_context, "PLT-", cancellationToken);
 
         var plant = new Plant
         {

@@ -1,12 +1,13 @@
 using MediatR;
 using Sencecon.Application.Common.Interfaces;
 using Sencecon.Domain.Entities;
+using Sencecon.Domain.Enums;
 
 namespace Sencecon.Application.Reports.Commands.CreateReport;
 
 public record CreateReportCommand : IRequest<Guid>
 {
-    public required string Name { get; init; }
+    public required ReportType Type { get; init; }
     public string GeneratedBy { get; init; } = string.Empty;
 }
 
@@ -21,12 +22,16 @@ public class CreateReportCommandHandler : IRequestHandler<CreateReportCommand, G
 
     public async Task<Guid> Handle(CreateReportCommand request, CancellationToken cancellationToken)
     {
+        var catalogue = ReportCatalogue.For(request.Type);
+        var now = DateTimeOffset.UtcNow;
+
         var entity = new Report
         {
-            Name = request.Name,
+            Name = $"{catalogue.Name} — {now:MMM yyyy}",
+            Type = request.Type,
             GeneratedBy = request.GeneratedBy,
-            GeneratedDate = DateTimeOffset.UtcNow,
-            Created = DateTimeOffset.UtcNow
+            GeneratedDate = now,
+            Created = now
         };
 
         _context.Reports.Add(entity);

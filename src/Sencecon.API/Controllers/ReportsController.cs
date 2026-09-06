@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sencecon.Application.Reports.Commands.CreateReport;
 using Sencecon.Application.Reports.Commands.DeleteReport;
+using Sencecon.Application.Reports.Queries.GetReportCatalogue;
 using Sencecon.Application.Reports.Queries.GetReports;
+using Sencecon.Domain.Enums;
 
 namespace Sencecon.API.Controllers;
 
@@ -28,6 +30,15 @@ public class ReportsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("catalogue")]
+    [Authorize(Policy = "reports-read")]
+    [ProducesResponseType(typeof(IReadOnlyList<ReportCatalogueEntryDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IReadOnlyList<ReportCatalogueEntryDto>>> GetCatalogue()
+    {
+        var result = await _sender.Send(new GetReportCatalogueQuery());
+        return Ok(result);
+    }
+
     [HttpPost]
     [Authorize(Policy = "reports-write")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
@@ -35,7 +46,7 @@ public class ReportsController : ControllerBase
     {
         var id = await _sender.Send(new CreateReportCommand
         {
-            Name = request.Name,
+            Type = request.Type,
             GeneratedBy = request.GeneratedBy
         });
 
@@ -52,4 +63,4 @@ public class ReportsController : ControllerBase
     }
 }
 
-public record CreateReportRequest(string Name, string GeneratedBy);
+public record CreateReportRequest(ReportType Type, string GeneratedBy);

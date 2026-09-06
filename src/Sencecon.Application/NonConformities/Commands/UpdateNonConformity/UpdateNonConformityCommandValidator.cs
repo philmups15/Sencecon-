@@ -9,10 +9,6 @@ public class UpdateNonConformityCommandValidator : AbstractValidator<UpdateNonCo
         RuleFor(v => v.Id)
             .NotEmpty();
 
-        RuleFor(v => v.Code)
-            .NotEmpty()
-            .MaximumLength(20);
-
         RuleFor(v => v.Description)
             .NotEmpty()
             .MaximumLength(500);

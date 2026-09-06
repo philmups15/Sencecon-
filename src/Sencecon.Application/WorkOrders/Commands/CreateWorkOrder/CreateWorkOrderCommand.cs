@@ -15,6 +15,7 @@ public record CreateWorkOrderCommand : IRequest<Guid>
     public Priority Priority { get; init; }
     public string Assignee { get; init; } = string.Empty;
     public WorkOrderStatus Status { get; init; }
+    public DateTimeOffset? DueDate { get; init; }
     public required Guid PlantId { get; init; }
 }
 
@@ -37,7 +38,7 @@ public class CreateWorkOrderCommandHandler : IRequestHandler<CreateWorkOrderComm
             throw new NotFoundException(nameof(Domain.Entities.Plant), request.PlantId);
         }
 
-        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.WorkOrders.Select(w => w.Code), "WO-", cancellationToken);
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context, "WO-", cancellationToken);
 
         var entity = new WorkOrder
         {
@@ -47,6 +48,7 @@ public class CreateWorkOrderCommandHandler : IRequestHandler<CreateWorkOrderComm
             Priority = request.Priority,
             Assignee = request.Assignee,
             Status = request.Status,
+            DueDate = request.DueDate,
             PlantId = request.PlantId,
             Created = DateTimeOffset.UtcNow
         };

@@ -19,5 +19,13 @@ public class CreatePlantCommandValidator : AbstractValidator<CreatePlantCommand>
         RuleFor(v => v.PerformanceRatio)
             .InclusiveBetween(0, 2)
             .When(v => v.PerformanceRatio.HasValue);
+
+        RuleFor(v => v.Latitude)
+            .InclusiveBetween(-90, 90)
+            .When(v => v.Latitude.HasValue);
+
+        RuleFor(v => v.Longitude)
+            .InclusiveBetween(-180, 180)
+            .When(v => v.Longitude.HasValue);
     }
 }

@@ -23,12 +23,15 @@ public class GetBomItemsQueryHandler : IRequestHandler<GetBomItemsQuery, IReadOn
             {
                 Id = b.Id,
                 Component = b.Component,
+                Category = b.Category,
                 Quantity = b.Quantity,
                 UnitCost = b.UnitCost,
                 Supplier = b.Supplier,
                 Status = b.Status,
                 PlantId = b.PlantId,
                 PlantName = b.Plant != null ? b.Plant.Name : null,
+                ProjectId = b.ProjectId,
+                ProjectName = b.Project != null ? b.Project.Name : null,
                 Created = b.Created
             })
             .ToListAsync(cancellationToken);

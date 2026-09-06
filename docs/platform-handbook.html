@@ -1,0 +1,1054 @@
+<title>Sencecon Platform Handbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground: #F1F6F4;
+    --surface: #FFFFFF;
+    --surface-2: #E7F0EE;
+    --border: #D2E0DD;
+    --border-strong: #B7CCC7;
+    --ink: #12201F;
+    --ink-muted: #51665F;
+    --ink-faint: #7C918B;
+    --accent: #1F6E72;
+    --accent-deep: #12484B;
+    --accent-bg: #E1EEEC;
+    --good: #1C8A4E;
+    --good-bg: #E3F3EA;
+    --warn: #8A5A16;
+    --warn-bg: #F6ECDC;
+    --crit: #A6362E;
+    --crit-bg: #F8E6E3;
+    --shadow: 0 1px 2px rgba(18, 32, 31, .05), 0 8px 24px rgba(18, 32, 31, .05);
+
+    --font-display: 'Manrope', 'Segoe UI', system-ui, sans-serif;
+    --font-body: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+    --step--1: clamp(.78rem, .76rem + .1vw, .83rem);
+    --step-0: clamp(.94rem, .91rem + .14vw, 1rem);
+    --step-1: clamp(1.1rem, 1.04rem + .3vw, 1.28rem);
+    --step-2: clamp(1.35rem, 1.24rem + .55vw, 1.72rem);
+    --step-3: clamp(1.72rem, 1.5rem + 1.1vw, 2.5rem);
+    --step-4: clamp(2.2rem, 1.75rem + 2.2vw, 3.6rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0E1918;
+      --surface: #152322;
+      --surface-2: #1C2E2C;
+      --border: #2A3E3B;
+      --border-strong: #3C5652;
+      --ink: #E9F1EF;
+      --ink-muted: #A6BAB5;
+      --ink-faint: #7E938E;
+      --accent: #52B6B2;
+      --accent-deep: #74CCC7;
+      --accent-bg: #163330;
+      --good: #4FB776;
+      --good-bg: #12291C;
+      --warn: #C99A5C;
+      --warn-bg: #2C2213;
+      --crit: #E2938A;
+      --crit-bg: #2E1815;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 30px rgba(0, 0, 0, .32);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0E1918;
+    --surface: #152322;
+    --surface-2: #1C2E2C;
+    --border: #2A3E3B;
+    --border-strong: #3C5652;
+    --ink: #E9F1EF;
+    --ink-muted: #A6BAB5;
+    --ink-faint: #7E938E;
+    --accent: #52B6B2;
+    --accent-deep: #74CCC7;
+    --accent-bg: #163330;
+    --good: #4FB776;
+    --good-bg: #12291C;
+    --warn: #C99A5C;
+    --warn-bg: #2C2213;
+    --crit: #E2938A;
+    --crit-bg: #2E1815;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 30px rgba(0, 0, 0, .32);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 0 clamp(1.1rem, 4vw, 3rem) 6rem;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    padding: clamp(3rem, 8vw, 6rem) 0 clamp(2rem, 5vw, 3.5rem);
+    border-bottom: 1px solid var(--border);
+  }
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    font-size: var(--step-1);
+    color: var(--accent-deep);
+  }
+  .wordmark svg { width: 1.4em; height: 1.4em; flex: none; }
+  .masthead h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--step-4);
+    letter-spacing: -.03em;
+    line-height: 1.02;
+    text-wrap: balance;
+    margin: 1.4rem 0 0;
+    max-width: 20ch;
+  }
+  .masthead .lede {
+    margin: 1.1rem 0 0;
+    max-width: 62ch;
+    font-size: var(--step-1);
+    color: var(--ink-muted);
+  }
+  .masthead .meta {
+    margin-top: 1.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem .55rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+  .masthead .meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .3rem .6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink-muted);
+  }
+  .masthead .meta b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- layout with rail ---------- */
+  .shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+  }
+  @media (min-width: 940px) {
+    .shell { grid-template-columns: 232px minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); }
+  }
+
+  nav.toc {
+    align-self: start;
+  }
+  @media (min-width: 940px) {
+    nav.toc { position: sticky; top: 1.5rem; max-height: calc(100vh - 3rem); overflow-y: auto; }
+  }
+  nav.toc .toc-title {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--ink-faint);
+    margin-bottom: .8rem;
+  }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc; }
+  nav.toc li { counter-increment: toc; }
+  nav.toc a {
+    display: grid;
+    grid-template-columns: 1.9em 1fr;
+    gap: .5em;
+    padding: .32rem 0;
+    text-decoration: none;
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+    line-height: 1.35;
+    border-radius: 5px;
+    transition: color .14s ease;
+  }
+  nav.toc a::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--font-mono);
+    color: var(--ink-faint);
+    font-size: .82em;
+  }
+  nav.toc a:hover { color: var(--accent); }
+  nav.toc a.active { color: var(--accent-deep); font-weight: 600; }
+  nav.toc a.active::before { color: var(--accent); }
+
+  details.toc-mobile {
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+    padding: .3rem .9rem;
+  }
+  details.toc-mobile summary {
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    padding: .55rem 0;
+    color: var(--ink-muted);
+  }
+  @media (min-width: 940px) { details.toc-mobile { display: none; } }
+  .toc-rail-wrap { display: none; }
+  @media (min-width: 940px) { .toc-rail-wrap { display: block; } }
+
+  /* ---------- sections ---------- */
+  main { min-width: 0; }
+  section { scroll-margin-top: 1.5rem; padding-top: 2.8rem; }
+  section:first-child { padding-top: .5rem; }
+  section + section { border-top: 1px solid var(--border); margin-top: 3rem; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: .1em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  section > h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--step-3);
+    letter-spacing: -.022em;
+    line-height: 1.08;
+    text-wrap: balance;
+    margin: .5rem 0 0;
+  }
+  section > .section-intro {
+    margin: .9rem 0 0;
+    max-width: 68ch;
+    color: var(--ink-muted);
+  }
+
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-1);
+    letter-spacing: -.015em;
+    margin: 2.4rem 0 .5rem;
+    text-wrap: balance;
+  }
+  h4 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--step-0);
+    margin: 1.6rem 0 .4rem;
+  }
+
+  p, ul, ol { max-width: 70ch; }
+  main p { margin: .75rem 0; }
+  main ul, main ol { margin: .75rem 0; padding-left: 1.3rem; }
+  main li { margin: .32rem 0; }
+  main li::marker { color: var(--ink-faint); }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible, .card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  strong { font-weight: 600; color: var(--ink); }
+  code, kbd, .mono { font-family: var(--font-mono); font-size: .9em; }
+  :not(pre) > code {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: .06em .38em;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+
+  /* ---------- code blocks ---------- */
+  pre {
+    margin: 1.1rem 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  pre .c { color: var(--ink-faint); }
+  pre .k { color: var(--accent); font-weight: 500; }
+
+  /* ---------- tables ---------- */
+  .table-wrap { overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--border); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: var(--step--1); }
+  thead th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-size: .82em;
+    color: var(--ink-faint);
+    padding: .7rem .9rem;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: .62rem .9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--surface-2) 40%, transparent); }
+  td .mono, th .mono { white-space: nowrap; }
+  table.matrix td { text-align: center; font-family: var(--font-mono); }
+  table.matrix td:first-child { text-align: left; font-family: var(--font-body); font-weight: 500; }
+  .rw { color: var(--good); font-weight: 600; }
+  .ro { color: var(--ink-muted); }
+  .no { color: var(--ink-faint); opacity: .55; }
+
+  /* ---------- callouts ---------- */
+  .note {
+    margin: 1.3rem 0;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    background: var(--accent-bg);
+    border-radius: 8px;
+    padding: .85rem 1.05rem;
+    font-size: var(--step--1);
+    max-width: 72ch;
+  }
+  .note.warn { border-left-color: var(--warn); background: var(--warn-bg); }
+  .note.crit { border-left-color: var(--crit); background: var(--crit-bg); }
+  .note .note-label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-size: .8em;
+    font-weight: 600;
+    display: block;
+    margin-bottom: .3rem;
+    color: var(--accent-deep);
+  }
+  .note.warn .note-label { color: var(--warn); }
+  .note.crit .note-label { color: var(--crit); }
+  .note p:first-of-type { margin-top: 0; }
+  .note p:last-of-type { margin-bottom: 0; }
+
+  /* ---------- flow diagram ---------- */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: .5rem;
+    margin: 1.4rem 0;
+    padding: 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    overflow-x: auto;
+  }
+  .flow-node {
+    flex: 1 1 132px;
+    min-width: 128px;
+    border: 1px solid var(--border-strong);
+    border-radius: 9px;
+    background: var(--surface-2);
+    padding: .7rem .8rem;
+  }
+  .flow-node .fn-kicker {
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .flow-node .fn-title { font-weight: 600; font-size: var(--step--1); margin-top: .15rem; }
+  .flow-node .fn-sub { font-size: .78rem; color: var(--ink-muted); margin-top: .28rem; line-height: 1.4; }
+  .flow-node.accent { background: var(--accent-bg); border-color: var(--accent); }
+  .flow-arrow {
+    align-self: center;
+    color: var(--ink-faint);
+    font-size: 1.1rem;
+    flex: none;
+  }
+  @media (max-width: 640px) {
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); align-self: flex-start; margin-left: .8rem; }
+  }
+
+  /* ---------- stacked architecture ---------- */
+  .stack { display: flex; flex-direction: column; gap: .6rem; margin: 1.4rem 0; }
+  .stack-row {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: .9rem 1.1rem;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  @media (max-width: 560px) { .stack-row { grid-template-columns: 1fr; gap: .35rem; } }
+  .stack-row .sr-label {
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--accent);
+  }
+  .stack-row .sr-body { font-size: var(--step--1); color: var(--ink-muted); }
+  .stack-row .sr-body b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- definition grid ---------- */
+  .defs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: .8rem;
+    margin: 1.3rem 0;
+  }
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: var(--surface);
+    padding: 1rem 1.1rem;
+    box-shadow: var(--shadow);
+  }
+  .card h4 { margin: 0 0 .3rem; font-family: var(--font-display); font-weight: 700; }
+  .card p { margin: 0; font-size: var(--step--1); color: var(--ink-muted); max-width: none; }
+  .card .mono { color: var(--ink); }
+
+  .pill {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: .74rem;
+    padding: .12rem .5rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+  .pill.ok { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, var(--border)); background: var(--good-bg); }
+  .pill.stub { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, var(--border)); background: var(--warn-bg); }
+
+  hr.rule { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+  }
+
+  .step-list { counter-reset: step; list-style: none; padding-left: 0; }
+  .step-list > li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 2.6rem;
+    margin: 1.1rem 0;
+  }
+  .step-list > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: -.05rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    display: grid;
+    place-items: center;
+    border-radius: 7px;
+    background: var(--accent);
+    color: var(--step-num-ink, #fff);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: .85rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --step-num-ink: #0E1918; }
+  }
+  :root[data-theme="dark"] { --step-num-ink: #0E1918; }
+</style>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="wordmark">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2 A10 10 0 0 1 12 22 A7 7 0 0 0 12 2Z" style="fill: var(--accent-deep)"></path>
+        <path d="M12 2 A10 10 0 0 0 12 22 A7 7 0 0 1 12 2Z" style="fill: var(--accent)"></path>
+      </svg>
+      Sencecon
+    </div>
+    <h1>Platform Handbook</h1>
+    <p class="lede">How the Sencecon solar-lifecycle platform is built, configured and deployed today &mdash; the two repositories, the one Railway project, the data model, and the flow that carries a lead from first contact through commissioning and into operations.</p>
+    <div class="meta">
+      <span>backend <b>Sencecon</b> &middot; .NET&nbsp;9</span>
+      <span>frontend <b>sensecon-platform</b> &middot; React&nbsp;18 + Vite</span>
+      <span>host <b>Railway</b> &middot; project <span class="mono">sencecon-api</span></span>
+      <span>db <b>PostgreSQL&nbsp;18</b></span>
+    </div>
+  </header>
+
+  <div class="shell">
+    <div>
+      <details class="toc-mobile">
+        <summary>Contents</summary>
+        <nav class="toc" id="toc-mobile-nav"></nav>
+      </details>
+      <div class="toc-rail-wrap">
+        <nav class="toc" id="toc-rail">
+          <div class="toc-title">Contents</div>
+          <ol id="toc-list">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#architecture">System architecture</a></li>
+            <li><a href="#backend">The backend &mdash; Sencecon</a></li>
+            <li><a href="#frontend">The frontend &mdash; sensecon-platform</a></li>
+            <li><a href="#data-model">Data model &amp; lifecycle</a></li>
+            <li><a href="#auth">Authentication &amp; permissions</a></li>
+            <li><a href="#flow">The business flow</a></li>
+            <li><a href="#deployment">Deployment</a></li>
+            <li><a href="#local">Local development</a></li>
+            <li><a href="#config">Configuration reference</a></li>
+            <li><a href="#gaps">Known gaps &amp; stubs</a></li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <main>
+
+      <!-- 1 ................................................. -->
+      <section id="overview">
+        <span class="eyebrow">01 &middot; Orientation</span>
+        <h2>Overview</h2>
+        <p class="section-intro">Sencecon manages the whole life of a commercial &amp; industrial solar plant: winning the work, delivering the project, commissioning the system, handing it over, and running it. It is two applications talking to one database.</p>
+
+        <div class="defs">
+          <div class="card">
+            <h4>Backend</h4>
+            <p><span class="mono">Sencecon</span> &mdash; a .NET&nbsp;9 Web API in Clean Architecture (Domain / Application / Infrastructure / API), MediatR CQRS, EF&nbsp;Core on PostgreSQL, JWT auth. Repo <span class="mono">github.com/philmups15/Sencecon-</span>, default branch <span class="mono">main</span>.</p>
+          </div>
+          <div class="card">
+            <h4>Frontend</h4>
+            <p><span class="mono">sensecon-platform</span> &mdash; a React&nbsp;18 + Vite single-page app, no router (screen state in <span class="mono">App.jsx</span>), a hand-rolled <span class="mono">fetch</span> client, inline styles in the Sencecon teal design system. Repo <span class="mono">github.com/philmups15/sensecon-platform</span>, default branch <span class="mono">master</span>.</p>
+          </div>
+          <div class="card">
+            <h4>Hosting</h4>
+            <p>One Railway project, <span class="mono">sencecon-api</span>, with three services: <b>api</b>, <b>frontend</b>, <b>Postgres</b>. The frontend repo also auto-publishes to GitHub&nbsp;Pages on every push to <span class="mono">master</span>.</p>
+          </div>
+        </div>
+
+        <h3>The shape of a working day</h3>
+        <p>A salesperson logs a lead as an <strong>Opportunity</strong> and moves it through the pipeline. When it is won, one click converts it into a <strong>Project</strong> and its first <strong>Plant</strong>. Delivery teams attach <strong>Site surveys</strong>, <strong>Designs</strong> and <strong>BOM</strong> lines. Once the plant is built, O&amp;M teams raise <strong>Work orders</strong>, record <strong>Commissioning tests</strong>, upload the <strong>Handover bundle</strong>, and track <strong>Non-conformities</strong>. The customer sees a read-only <strong>Portal</strong> of their plants and closed work.</p>
+      </section>
+
+      <!-- 2 ................................................. -->
+      <section id="architecture">
+        <span class="eyebrow">02 &middot; How it fits together</span>
+        <h2>System architecture</h2>
+        <p class="section-intro">Everything runs inside one Railway project. The API is the only thing that talks to the database; the browser only ever talks to the API.</p>
+
+        <div class="flow" role="img" aria-label="Browser to API to Postgres, all inside one Railway project">
+          <div class="flow-node">
+            <div class="fn-kicker">Client</div>
+            <div class="fn-title">Browser (SPA)</div>
+            <div class="fn-sub">React bundle served by <span class="mono">serve</span>. JWT in <span class="mono">localStorage</span>.</div>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node accent">
+            <div class="fn-kicker">Railway &middot; api</div>
+            <div class="fn-title">Sencecon.API</div>
+            <div class="fn-sub"><span class="mono">:8080</span> &middot; Dockerfile build &middot; runs migrations on start</div>
+          </div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node">
+            <div class="fn-kicker">Railway &middot; Postgres</div>
+            <div class="fn-title">PostgreSQL 18</div>
+            <div class="fn-sub"><span class="mono">postgres.railway.internal:5432</span> &middot; db <span class="mono">railway</span> &middot; 500&nbsp;MB volume</div>
+          </div>
+        </div>
+
+        <h3>Tech stack</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Layer</th><th>Choice</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>API framework</td><td>ASP.NET Core 9 (Web API)</td><td>Controllers, not minimal APIs</td></tr>
+              <tr><td>Application pattern</td><td>MediatR CQRS</td><td>One command/query + handler per use case, folder-per-feature</td></tr>
+              <tr><td>Validation</td><td>FluentValidation</td><td>Pipeline behaviour; failures &rarr; <span class="mono">400</span> via middleware</td></tr>
+              <tr><td>ORM</td><td>EF Core 9 + Npgsql</td><td><span class="mono">IEntityTypeConfiguration</span> per entity; code-first migrations</td></tr>
+              <tr><td>Auth</td><td>JWT bearer</td><td>HS256, claims kept un-mapped (<span class="mono">sub</span> read directly)</td></tr>
+              <tr><td>Email</td><td>Resend</td><td>Password-reset links only</td></tr>
+              <tr><td>Data protection</td><td>Key ring persisted to the DB</td><td>Containers are ephemeral; file-system keys would rotate on every deploy</td></tr>
+              <tr><td>Docs</td><td>Swashbuckle / Swagger UI</td><td>Enabled in every environment, open</td></tr>
+              <tr><td>Frontend build</td><td>Vite 5 + <span class="mono">@vitejs/plugin-react</span></td><td>Output is a static <span class="mono">dist/</span>, served by <span class="mono">serve</span></td></tr>
+              <tr><td>Frontend libs</td><td><span class="mono">jspdf</span>, <span class="mono">xlsx</span></td><td>Report export; no state-management or router library</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3 ................................................. -->
+      <section id="backend">
+        <span class="eyebrow">03 &middot; Sencecon</span>
+        <h2>The backend</h2>
+        <p class="section-intro">Four projects, dependencies pointing inward. <span class="mono">API</span> &rarr; <span class="mono">Application</span> + <span class="mono">Infrastructure</span> &rarr; <span class="mono">Domain</span>. <span class="mono">Domain</span> depends on nothing.</p>
+
+        <div class="stack">
+          <div class="stack-row"><div class="sr-label">Domain</div><div class="sr-body"><b>Entities &amp; enums only.</b> <span class="mono">Plant</span>, <span class="mono">WorkOrder</span>, <span class="mono">Project</span>, <span class="mono">Opportunity</span>, <span class="mono">Survey</span>, <span class="mono">Design</span>, <span class="mono">BomItem</span>, <span class="mono">NonConformity</span>, <span class="mono">CommissioningTestResult</span>, <span class="mono">PlantAttachment</span>, <span class="mono">User</span>, <span class="mono">RolePermission</span>, &hellip; plus the lifecycle enums. Base classes carry <span class="mono">Id</span> (client-generated GUID) and audit stamps.</div></div>
+          <div class="stack-row"><div class="sr-label">Application</div><div class="sr-body"><b>Use cases.</b> <span class="mono">Commands/</span> and <span class="mono">Queries/</span> folders per feature, each with a MediatR handler, a DTO, and (for writes) a FluentValidation validator. <span class="mono">IApplicationDbContext</span> is the only DB seam. <span class="mono">EntityCodeGenerator</span> assigns human codes.</div></div>
+          <div class="stack-row"><div class="sr-label">Infrastructure</div><div class="sr-body"><b>The outside world.</b> <span class="mono">ApplicationDbContext</span>, EF configurations &amp; migrations, JWT generation, password hashing, Resend email, the DB-backed data-protection store. Registered in <span class="mono">AddInfrastructure(configuration)</span>.</div></div>
+          <div class="stack-row"><div class="sr-label">API</div><div class="sr-body"><b>HTTP.</b> 15 controllers, all <span class="mono">[Authorize]</span>. Each action forwards a request record to <span class="mono">ISender</span> and returns the result. <span class="mono">ExceptionHandlingMiddleware</span> maps domain exceptions to status codes.</div></div>
+        </div>
+
+        <h3>Request lifecycle</h3>
+        <div class="flow" role="img" aria-label="Controller to MediatR to validator to handler to DbContext to Postgres, with exception middleware wrapping the pipeline">
+          <div class="flow-node"><div class="fn-kicker">1</div><div class="fn-title">Controller</div><div class="fn-sub">Maps <span class="mono">…Request</span> record &rarr; command/query, calls <span class="mono">_sender.Send()</span></div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node"><div class="fn-kicker">2</div><div class="fn-title">Validation behaviour</div><div class="fn-sub">Runs the matching <span class="mono">AbstractValidator</span>; throws <span class="mono">ValidationException</span> &rarr; <span class="mono">400</span></div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node"><div class="fn-kicker">3</div><div class="fn-title">Handler</div><div class="fn-sub">Checks FK existence &rarr; <span class="mono">NotFoundException</span>; mutates via <span class="mono">IApplicationDbContext</span></div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node"><div class="fn-kicker">4</div><div class="fn-title">EF Core / Npgsql</div><div class="fn-sub"><span class="mono">SaveChangesAsync</span> &rarr; PostgreSQL</div></div>
+        </div>
+        <p><span class="mono">ExceptionHandlingMiddleware</span> wraps the whole pipeline and turns <span class="mono">ValidationException</span>&nbsp;&rarr;&nbsp;<span class="mono">400</span>, <span class="mono">NotFoundException</span>&nbsp;&rarr;&nbsp;<span class="mono">404</span>, <span class="mono">ForbiddenAccessException</span>&nbsp;&rarr;&nbsp;<span class="mono">403</span>, <span class="mono">ConflictException</span>&nbsp;&rarr;&nbsp;<span class="mono">409</span>, <span class="mono">UnauthorizedAccessException</span>&nbsp;&rarr;&nbsp;<span class="mono">401</span>, everything else&nbsp;&rarr;&nbsp;<span class="mono">500</span> (logged).</p>
+
+        <h3>Startup sequence &mdash; <span class="mono">Program.cs</span></h3>
+        <ol class="step-list">
+          <li>Build config &rarr; register <span class="mono">AddApplication()</span> + <span class="mono">AddInfrastructure(config)</span>.</li>
+          <li>Configure JWT bearer &mdash; validate issuer, audience, lifetime, signing key; <span class="mono">OnTokenValidated</span> re-reads the user row and rejects the request if <span class="mono">IsActive == false</span> (so "disable user" takes effect immediately).</li>
+          <li>Register one authorization policy pair <span class="mono">{module}-read</span> / <span class="mono">{module}-write</span> for every module in <span class="mono">ModuleCatalogue</span>.</li>
+          <li>Build the app. Mount Swagger (all environments).</li>
+          <li><strong>Run <code>await db.Database.MigrateAsync()</code></strong> &mdash; unconditional, on every start.</li>
+          <li>Exception middleware &rarr; HTTPS redirect &rarr; CORS &rarr; auth &rarr; controllers.</li>
+        </ol>
+
+        <h3>Human-readable codes</h3>
+        <p>On create, <span class="mono">EntityCodeGenerator</span> reads the max existing number for a prefix and adds one, formatted <span class="mono">PREFIX-000</span>. These are server-owned &mdash; not editable on update.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Prefix</th><th>Entity</th><th>Prefix</th><th>Entity</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mono">OPP-</span></td><td>Opportunity</td><td><span class="mono">SUR-</span></td><td>Survey</td></tr>
+              <tr><td><span class="mono">PRJ-</span></td><td>Project</td><td><span class="mono">DSN-</span></td><td>Design</td></tr>
+              <tr><td><span class="mono">PLT-</span></td><td>Plant</td><td><span class="mono">WO-</span></td><td>Work order</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><span class="mono">NonConformity.Code</span> is still supplied by the caller. Codes have a unique index; a rare concurrent-create race fails with a constraint violation rather than duplicating.</p>
+
+        <h3>Controllers</h3>
+        <p class="mono" style="font-size:var(--step--1);color:var(--ink-muted)">Auth &middot; Users &middot; RolePermissions &middot; AuditLog &middot; Integrations &middot; Opportunities &middot; Projects &middot; Surveys &middot; Designs &middot; BomItems &middot; Plants &middot; WorkOrders &middot; NonConformities &middot; Reports &middot; TodoItems</p>
+      </section>
+
+      <!-- 4 ................................................. -->
+      <section id="frontend">
+        <span class="eyebrow">04 &middot; sensecon-platform</span>
+        <h2>The frontend</h2>
+        <p class="section-intro">A deliberately small SPA. One <span class="mono">App.jsx</span> holds the current screen in state and renders it from a <span class="mono">SCREENS</span> map &mdash; there is no router, no Redux, no component library.</p>
+
+        <h3><span class="mono">src/lib/api.js</span> &mdash; the whole client</h3>
+        <ul>
+          <li><strong>Base URL</strong> from <span class="mono">import.meta.env.VITE_API_URL</span>, default <span class="mono">http://localhost:5080</span>.</li>
+          <li><strong>Token</strong> in <span class="mono">localStorage["sencecon_token"]</span>; attached as <span class="mono">Authorization: Bearer</span> on every call.</li>
+          <li><strong>Error handling</strong>: non-2xx &rarr; throw <span class="mono">Error</span> with <span class="mono">payload.title</span> or the validation errors.</li>
+          <li><strong>DTO&nbsp;&rarr;&nbsp;view mappers</strong> (<span class="mono">toPlantView</span>, <span class="mono">toWorkOrderView</span>, &hellip;) translate PascalCase enum strings into the label / tone / key shapes the screens and shared components expect.</li>
+          <li><strong>Permission cache</strong>: <span class="mono">getRolePermissions()</span> runs once at sign-in; <span class="mono">canAccess(role, module, mode)</span> and <span class="mono">canViewScreen(role, key)</span> drive the sidebar and every write control. The server enforces the same rules for real.</li>
+        </ul>
+
+        <h3>Screens</h3>
+        <p>Some screens are full CRUD against the API; a few still render decorative panels from <span class="mono">src/lib/mockData.js</span> alongside the real data.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Screen</th><th>State</th><th>Detail</th></tr></thead>
+            <tbody>
+              <tr><td>Opportunities</td><td><span class="pill ok">live</span></td><td>Pipeline, stage-data fields, notes, activity log, attachments, convert-to-project</td></tr>
+              <tr><td>Projects</td><td><span class="pill ok">live</span></td><td>CRUD; shows linked surveys &amp; plant; can spawn a survey. Milestone / task / risk tabs are mock.</td></tr>
+              <tr><td>Surveys</td><td><span class="pill ok">live</span></td><td>CRUD with Project &amp; Plant pickers. Photos / measurements panels are mock.</td></tr>
+              <tr><td>Design</td><td><span class="pill ok">live</span></td><td>CRUD with Project &amp; Survey pickers; auto <span class="mono">DSN-</span> codes. Attachments / revision-history panels are mock.</td></tr>
+              <tr><td>BOM</td><td><span class="pill ok">live</span></td><td>CRUD with inline row edit + Plant picker. Cost-variance chart is mock.</td></tr>
+              <tr><td>Plants</td><td><span class="pill ok">live</span></td><td>CRUD with Project picker; lifecycle timeline; Handover-bundle &amp; Open-work tabs</td></tr>
+              <tr><td>Work orders</td><td><span class="pill ok">live</span></td><td>Kanban board, status moves, sign-off</td></tr>
+              <tr><td>Commissioning</td><td><span class="pill ok">live</span></td><td>Fixed 7-test grid (upsert), NC tracker, handover bundle</td></tr>
+              <tr><td>Portal</td><td><span class="pill ok">live</span></td><td>Read-only customer view: plants, closed work orders, per-plant handover bundles</td></tr>
+              <tr><td>Reports</td><td><span class="pill ok">live</span></td><td>Generate / delete; catalogue list is mock</td></tr>
+              <tr><td>Admin</td><td><span class="pill ok">live</span></td><td>Users, Roles &amp; permissions, Integrations, Audit log</td></tr>
+              <tr><td>Dashboard</td><td><span class="pill stub">mock</span></td><td>KPIs, map, stage distribution &mdash; all from <span class="mono">mockData.js</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5 ................................................. -->
+      <section id="data-model">
+        <span class="eyebrow">05 &middot; Entities</span>
+        <h2>Data model &amp; lifecycle</h2>
+        <p class="section-intro">A plant moves along a four-stage lifecycle. Projects share the same enum. Opportunities have their own sales pipeline.</p>
+
+        <h3>Lifecycle stages</h3>
+        <div class="flow" role="img" aria-label="LifecycleStage enum: DesignSurvey, Deployment, Commissioning, Operating">
+          <div class="flow-node"><div class="fn-kicker">0</div><div class="fn-title">DesignSurvey</div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node"><div class="fn-kicker">1</div><div class="fn-title">Deployment</div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node"><div class="fn-kicker">2</div><div class="fn-title">Commissioning</div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node"><div class="fn-kicker">3</div><div class="fn-title">Operating</div></div>
+        </div>
+        <div class="note warn">
+          <span class="note-label">No gate</span>
+          <p><span class="mono">Stage</span> is a free field set on create/update. Nothing enforces order, and nothing checks that commissioning tests pass or a handover bundle exists before a plant is marked <span class="mono">Operating</span>.</p>
+        </div>
+
+        <h4>Other enums</h4>
+        <ul>
+          <li><strong>OpportunityStage</strong>: Qualifying &rarr; SiteVisit &rarr; Proposal &rarr; Negotiation &rarr; Won</li>
+          <li><strong>SurveyStatus</strong>: Scheduled &rarr; InProgress &rarr; Complete &rarr; SignedOff &nbsp;&middot;&nbsp; <strong>DesignStatus</strong>: InReview, Approved</li>
+          <li><strong>WorkOrderStatus</strong>: Open, InProgress, Review, Done &nbsp;&middot;&nbsp; <strong>WorkOrderType</strong>: OM, Deployment &nbsp;&middot;&nbsp; <strong>Priority</strong>: Low, Medium, High</li>
+          <li><strong>CommissioningTestCategory</strong>: Dc, Ac, Monitoring, Safety &nbsp;&middot;&nbsp; <strong>CommissioningResultStatus</strong>: Pending, Pass, Fail</li>
+          <li><strong>PlantHealth</strong>: Unknown, Good, Watch, AtRisk, Critical &nbsp;&middot;&nbsp; <strong>BomStatus</strong>: Ordered, Delivered, InProduction, Backordered</li>
+        </ul>
+
+        <h3>How the modules connect</h3>
+        <p>Real foreign keys are optional and set <span class="mono">null</span> on delete of the other side. Where there is no FK, a free-text name is stored instead &mdash; and now, wherever a real link exists, the API returns the <em>linked entity's live name</em> in preference to the stored text.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Link</th><th>Kind</th><th>Set by</th></tr></thead>
+            <tbody>
+              <tr><td>WorkOrder &rarr; Plant</td><td><span class="rw">FK, required</span></td><td>Work-order create/edit (plant is mandatory)</td></tr>
+              <tr><td>PlantAttachment &rarr; Plant</td><td><span class="rw">FK, required</span></td><td>Upload</td></tr>
+              <tr><td>CommissioningTestResult &rarr; Plant</td><td><span class="rw">FK, required</span></td><td>Recording a test</td></tr>
+              <tr><td>Plant &rarr; Project</td><td><span class="rw">FK, optional</span></td><td>Auto on opportunity conversion; Plants screen picker</td></tr>
+              <tr><td>Survey &rarr; Project</td><td><span class="rw">FK, optional</span></td><td>Surveys / Projects screen picker</td></tr>
+              <tr><td>Survey &rarr; Plant</td><td><span class="rw">FK, optional</span></td><td>Surveys screen picker (auto-fills the site name)</td></tr>
+              <tr><td>Design &rarr; Survey</td><td><span class="rw">FK, optional</span></td><td>Design screen picker</td></tr>
+              <tr><td>Design &rarr; Project</td><td><span class="rw">FK, optional</span></td><td>Design screen picker, or inherited from the linked survey</td></tr>
+              <tr><td>BomItem &rarr; Plant</td><td><span class="rw">FK, optional</span></td><td>BOM screen picker</td></tr>
+              <tr><td>NonConformity &rarr; Plant</td><td><span class="rw">FK, optional</span></td><td>API only (no NC screen yet)</td></tr>
+              <tr><td>Project &rarr; Opportunity</td><td><span class="no">none</span></td><td>One-way <span class="mono">Converted</span> flag on the opportunity</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6 ................................................. -->
+      <section id="auth">
+        <span class="eyebrow">06 &middot; Who can do what</span>
+        <h2>Authentication &amp; permissions</h2>
+        <p class="section-intro">JWT for identity, a DB-backed matrix for authorisation. Both are enforced server-side; the frontend cache only decides what to show.</p>
+
+        <h3>Sign-in</h3>
+        <ul>
+          <li><span class="mono">POST /api/auth/register</span> &rarr; creates a <span class="mono">User</span> (<strong>always role <span class="mono">User</span></strong> &mdash; there is no first-user-is-admin rule), returns <span class="mono">{ userId, email, token }</span>.</li>
+          <li><span class="mono">POST /api/auth/login</span> &rarr; same shape. Token carries <span class="mono">sub</span>, <span class="mono">email</span>, <span class="mono">jti</span>; lifetime from <span class="mono">Jwt:ExpiryMinutes</span>.</li>
+          <li>Admin promotes a user with <span class="mono">PUT /api/users/{id}/role</span>, or set <span class="mono">Users.Role</span> directly (enum: <span class="mono">User&nbsp;0</span>, <span class="mono">Admin&nbsp;1</span>, <span class="mono">ProjectManager&nbsp;2</span>, <span class="mono">Sales&nbsp;3</span>, <span class="mono">DesignEngineer&nbsp;4</span>).</li>
+          <li>Password reset: admin triggers <span class="mono">POST /api/users/{id}/password-reset</span> &rarr; Resend emails a 24&nbsp;h link &rarr; public <span class="mono">POST /api/auth/reset-password</span>.</li>
+        </ul>
+
+        <h3>The permission matrix</h3>
+        <p>Seeded by migration into <span class="mono">RolePermission</span> rows, then editable at <strong>Admin &rsaquo; Roles &amp; permissions</strong>. Each controller action carries <span class="mono">[Authorize(Policy = "{module}-read")]</span> or <span class="mono">"{module}-write"</span>; <span class="mono">ModulePermissionAuthorizationHandler</span> looks up the row for the caller's role.</p>
+        <div class="table-wrap">
+          <table class="matrix">
+            <thead><tr><th>Module</th><th>Admin</th><th>User</th><th>Sales</th><th>ProjectManager</th><th>DesignEngineer</th></tr></thead>
+            <tbody>
+              <tr><td>opportunities</td><td class="rw">RW</td><td class="ro">R</td><td class="rw">RW</td><td class="ro">R</td><td class="no">&mdash;</td></tr>
+              <tr><td>surveys</td><td class="rw">RW</td><td class="ro">R</td><td class="no">&mdash;</td><td class="ro">R</td><td class="rw">RW</td></tr>
+              <tr><td>designs</td><td class="rw">RW</td><td class="ro">R</td><td class="no">&mdash;</td><td class="ro">R</td><td class="rw">RW</td></tr>
+              <tr><td>bomItems</td><td class="rw">RW</td><td class="ro">R</td><td class="no">&mdash;</td><td class="ro">R</td><td class="rw">RW</td></tr>
+              <tr><td>projects</td><td class="rw">RW</td><td class="ro">R</td><td class="ro">R</td><td class="rw">RW</td><td class="ro">R</td></tr>
+              <tr><td>plants</td><td class="rw">RW</td><td class="ro">R</td><td class="no">&mdash;</td><td class="rw">RW</td><td class="no">&mdash;</td></tr>
+              <tr><td>workOrders</td><td class="rw">RW</td><td class="ro">R</td><td class="no">&mdash;</td><td class="rw">RW</td><td class="no">&mdash;</td></tr>
+              <tr><td>nonConformities</td><td class="rw">RW</td><td class="ro">R</td><td class="no">&mdash;</td><td class="rw">RW</td><td class="no">&mdash;</td></tr>
+              <tr><td>reports</td><td class="rw">RW</td><td class="ro">R</td><td class="ro">R</td><td class="rw">RW</td><td class="ro">R</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The Commissioning &amp; Handover screen is gated on <span class="mono">plants</span> (it reads and writes plant data). Admin-only screens check <span class="mono">role === "Admin"</span> directly.</p>
+      </section>
+
+      <!-- 7 ................................................. -->
+      <section id="flow">
+        <span class="eyebrow">07 &middot; Lead to operations</span>
+        <h2>The business flow</h2>
+        <p class="section-intro">The end-to-end path. The one hard automation is the conversion step; everything else is a person choosing a link from a dropdown.</p>
+
+        <div class="flow" role="img" aria-label="Opportunity to Project plus Plant to Survey to Design to BOM to plant operations to customer portal">
+          <div class="flow-node"><div class="fn-kicker">Sales</div><div class="fn-title">Opportunity</div><div class="fn-sub"><span class="mono">OPP-</span> &middot; 5-stage pipeline</div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node accent"><div class="fn-kicker">Convert &middot; auto</div><div class="fn-title">Project + Plant</div><div class="fn-sub"><span class="mono">PRJ-</span> and <span class="mono">PLT-</span>, linked</div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node"><div class="fn-kicker">Delivery</div><div class="fn-title">Survey &rarr; Design &rarr; BOM</div><div class="fn-sub"><span class="mono">SUR- &middot; DSN-</span> &middot; equipment lines</div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node"><div class="fn-kicker">O&amp;M</div><div class="fn-title">Work &middot; Commissioning &middot; Handover</div><div class="fn-sub"><span class="mono">WO-</span> &middot; test grid &middot; document bundle</div></div>
+          <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+          <div class="flow-node"><div class="fn-kicker">Customer</div><div class="fn-title">Portal</div><div class="fn-sub">read-only</div></div>
+        </div>
+
+        <h3>Step by step</h3>
+        <ol class="step-list">
+          <li><strong>Log the opportunity.</strong> Customer, capacity, location, owner, value. Move it <span class="mono">Qualifying &rarr; SiteVisit &rarr; Proposal &rarr; Negotiation &rarr; Won</span>; each move can carry a note and stage-specific free-text fields, and writes an activity-log entry.</li>
+          <li><strong>Convert (once <span class="mono">Won</span>).</strong> The button appears only when the stage is <span class="mono">Won</span> and it has not been converted; the server re-checks both. It creates:
+            <ul>
+              <li>a <span class="mono">Project</span> &mdash; name <span class="mono">"{Customer} &ndash; {Location}"</span>, stage <span class="mono">DesignSurvey</span>, budget = opportunity value;</li>
+              <li>a <span class="mono">Plant</span> &mdash; same name, capacity carried over, stage <span class="mono">DesignSurvey</span>, <span class="mono">ProjectId</span> set;</li>
+              <li>an activity-log line: <em>"Converted opportunity to project PRJ-004 and created plant PLT-002"</em>.</li>
+            </ul>
+            The opportunity is flagged <span class="mono">Converted</span> (not deleted).
+          </li>
+          <li><strong>Site survey.</strong> From the Surveys screen or from inside the Project. Pick the Project and the Plant (the plant selection auto-fills the site-name field). Status runs <span class="mono">Scheduled &rarr; &hellip; &rarr; SignedOff</span> with a manual progress&nbsp;%.</li>
+          <li><strong>Design.</strong> Pick a Project and/or a Survey (a survey without an explicit project inherits its project). Status <span class="mono">InReview / Approved</span>, revision string. Code auto-assigned <span class="mono">DSN-###</span>.</li>
+          <li><strong>BOM.</strong> Component, quantity, unit cost, supplier, status &mdash; each line optionally scoped to the Plant it is installed on.</li>
+          <li><strong>Advance the plant.</strong> Someone sets the plant stage to <span class="mono">Deployment</span>, then <span class="mono">Commissioning</span>, then <span class="mono">Operating</span>. Manual.</li>
+          <li><strong>Work orders.</strong> Raised against a plant (mandatory). Kanban board <span class="mono">Open &rarr; InProgress &rarr; Review &rarr; Done</span>; a "Sign off &amp; close" button sets <span class="mono">Done</span>.</li>
+          <li><strong>Commissioning.</strong> A fixed checklist &mdash; DC (2), AC (2), Monitoring (1), Safety (2). Each test is <span class="mono">Pending / Pass / Fail</span>; setting it upserts on <span class="mono">(plant, category, testName)</span>, recording who and when. Latest value only, no history.</li>
+          <li><strong>Handover bundle.</strong> Versioned file uploads on the plant (re-uploading under the same title bumps the version). Shared by the Plants and Commissioning screens; read-only in the Portal.</li>
+          <li><strong>Portal.</strong> The customer sees their plants (capacity, PR&nbsp;%, health), closed work-order history, and a handover bundle per plant that has documents.</li>
+        </ol>
+
+        <div class="note">
+          <span class="note-label">The seam in the middle</span>
+          <p>The sales/design side (Opportunity &rarr; Project &rarr; Survey &rarr; Design &rarr; BOM) and the O&amp;M side (Plant &rarr; Work orders &rarr; Commissioning &rarr; Handover) are joined by exactly one hard link: <span class="mono">Plant.ProjectId</span>, created at conversion. Survey&nbsp;&rarr;&nbsp;Plant and BomItem&nbsp;&rarr;&nbsp;Plant are optional links a person sets. There is still no gated hand-off &mdash; no sign-off record, no acceptance date.</p>
+        </div>
+      </section>
+
+      <!-- 8 ................................................. -->
+      <section id="deployment">
+        <span class="eyebrow">08 &middot; Shipping it</span>
+        <h2>Deployment</h2>
+        <p class="section-intro">One Railway project, three services. Neither app service has a GitHub source connected &mdash; deploys are pushed from a local checkout with <span class="mono">railway up</span>.</p>
+
+        <h3>Railway &mdash; project <span class="mono">sencecon-api</span></h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Resource</th><th>ID</th><th>Config</th></tr></thead>
+            <tbody>
+              <tr><td>Project</td><td><span class="mono">6cb43ef2-fd47-4c68-8e91-27133d85b508</span></td><td>workspace <em>philmups15's Projects</em></td></tr>
+              <tr><td>Environment <span class="mono">production</span></td><td><span class="mono">7ffcdd0a-55c5-4ac2-8cf6-0896d55024ce</span></td><td>the only environment</td></tr>
+              <tr><td>Service <b>api</b></td><td><span class="mono">ed8380fe-e4b4-4f31-9e89-b1a7d0c6c0e8</span></td><td>Dockerfile build &middot; <span class="mono">api-production-562a.up.railway.app:8080</span></td></tr>
+              <tr><td>Service <b>frontend</b></td><td><span class="mono">6186b890-ae2a-49cc-856b-3b919f01ec8c</span></td><td>Nixpacks + <span class="mono">railway.json</span> &middot; <span class="mono">frontend-production-edee.up.railway.app</span></td></tr>
+              <tr><td>Service <b>Postgres</b></td><td><span class="mono">3cd44df7-4b05-4845-bd41-45d40c349a06</span></td><td>image <span class="mono">ghcr.io/railwayapp-templates/postgres-ssl:18</span> &middot; volume <span class="mono">postgres-volume</span> (500&nbsp;MB, <span class="mono">/var/lib/postgresql/data</span>)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note warn">
+          <span class="note-label">Also present</span>
+          <p>A second, empty project also named <span class="mono">sencecon-api</span> (<span class="mono">bd216990-…</span>) holds only a bare Postgres and is unused. Ignore it.</p>
+        </div>
+
+        <h3>Build per service</h3>
+        <ul>
+          <li><strong>api</strong> &mdash; multi-stage <span class="mono">Dockerfile</span>: <span class="mono">sdk:9.0</span> restores &amp; <span class="mono">dotnet publish</span>, <span class="mono">aspnet:9.0</span> runs it. <span class="mono">ASPNETCORE_HTTP_PORTS=8080</span>, entrypoint <span class="mono">dotnet Sencecon.API.dll</span>. Layer caching makes rebuilds ~40&nbsp;s.</li>
+          <li><strong>frontend</strong> &mdash; Nixpacks detects Node, runs <span class="mono">npm ci</span> + <span class="mono">npm run build</span>, then the <span class="mono">railway.json</span> start command <span class="mono">npm run start</span> = <span class="mono">serve -s dist -l $PORT</span>. <span class="mono">VITE_API_URL</span> and <span class="mono">VITE_BASE_PATH=/</span> are baked in at build time.</li>
+        </ul>
+
+        <h3>Migrations on deploy</h3>
+        <p><span class="mono">Program.cs</span> calls <code>db.Database.MigrateAsync()</code> at startup, <strong>unconditionally</strong>. Every new api container applies pending migrations before it serves traffic &mdash; there is no separate migration step. Verified on the last deploy: the three link migrations applied cleanly against the production database.</p>
+
+        <h3>The deploy procedure</h3>
+        <p>After a PR is merged to the default branch:</p>
+<pre><span class="c"># --- backend ---</span>
+cd ~/Sencecon
+git checkout main &amp;&amp; git pull
+railway link <span class="k">--project</span> 6cb43ef2-fd47-4c68-8e91-27133d85b508 \
+             <span class="k">--environment</span> 7ffcdd0a-55c5-4ac2-8cf6-0896d55024ce \
+             <span class="k">--service</span> ed8380fe-e4b4-4f31-9e89-b1a7d0c6c0e8
+railway up <span class="k">--detach</span> -m <span class="c">"what changed"</span>
+<span class="c"># container start runs MigrateAsync()</span>
+
+<span class="c"># --- frontend ---</span>
+cd ~/sensecon-platform
+git checkout master &amp;&amp; git pull
+railway link <span class="k">--project</span> 6cb43ef2-fd47-4c68-8e91-27133d85b508 \
+             <span class="k">--environment</span> 7ffcdd0a-55c5-4ac2-8cf6-0896d55024ce \
+             <span class="k">--service</span> 6186b890-ae2a-49cc-856b-3b919f01ec8c
+railway up <span class="k">--detach</span> -m <span class="c">"what changed"</span></pre>
+        <p>Then confirm the deployment reached <span class="mono">SUCCESS</span> (<span class="mono">railway deployment list</span>) and hit a live endpoint.</p>
+
+        <h3>GitHub Pages (frontend only)</h3>
+        <p><span class="mono">.github/workflows/deploy.yml</span> triggers on push to <span class="mono">master</span> and publishes <span class="mono">dist/</span> to GitHub Pages at <span class="mono">philmups15.github.io/sensecon-platform/</span> &mdash; a second, independent copy of the frontend. It does <em>not</em> run on pull requests, so there is no PR check.</p>
+
+        <div class="note crit">
+          <span class="note-label">No auto-deploy</span>
+          <p>The <span class="mono">api</span> and <span class="mono">frontend</span> services have no repo connected, so merging to <span class="mono">main</span>/<span class="mono">master</span> deploys nothing on its own. Run <span class="mono">railway up</span>, or connect the repos in the Railway dashboard for push-to-deploy.</p>
+        </div>
+      </section>
+
+      <!-- 9 ................................................. -->
+      <section id="local">
+        <span class="eyebrow">09 &middot; Running it yourself</span>
+        <h2>Local development</h2>
+        <p class="section-intro">PostgreSQL on the host, the API in <span class="mono">Development</span> on <span class="mono">:5080</span>, Vite on <span class="mono">:5173</span>.</p>
+
+        <ol class="step-list">
+          <li><strong>Database.</strong> PostgreSQL&nbsp;16 via Homebrew (<span class="mono">brew services start postgresql@16</span>), database <span class="mono">sencecon_dev</span>, user <span class="mono">postgres</span> / <span class="mono">postgres</span>, <span class="mono">localhost:5432</span>. The API creates the schema on first run via <span class="mono">MigrateAsync()</span>.</li>
+          <li><strong>API.</strong>
+<pre><span class="k">ASPNETCORE_ENVIRONMENT</span>=Development \
+  dotnet run --project src/Sencecon.API --urls http://localhost:5080</pre>
+            Swagger UI at <span class="mono">http://localhost:5080/swagger</span>. Config comes from <span class="mono">appsettings.Development.json</span> (dev connection string, throwaway JWT secret, <span class="mono">Frontend:BaseUrl = http://localhost:5173</span>).
+          </li>
+          <li><strong>Frontend.</strong>
+<pre>cd ~/sensecon-platform
+npm install
+npm run dev   <span class="c"># Vite &rarr; http://localhost:5173 (5174 if taken)</span></pre>
+            <span class="mono">VITE_API_URL</span> is unset locally, so <span class="mono">api.js</span> falls back to <span class="mono">http://localhost:5080</span>. CORS in <span class="mono">appsettings.Development.json</span> already allows <span class="mono">http://localhost:5173</span>.
+          </li>
+          <li><strong>Make an admin.</strong> Register through the UI (you get role <span class="mono">User</span>), then <code>UPDATE "Users" SET "Role" = 1 WHERE "Email" = '…';</code> and sign in again for a fresh token.</li>
+        </ol>
+
+        <div class="note">
+          <span class="note-label">Two database names</span>
+          <p><span class="mono">appsettings.json</span> (base) points at a database called <span class="mono">sencecon</span>; <span class="mono">appsettings.Development.json</span> overrides it to <span class="mono">sencecon_dev</span>. Running without <span class="mono">ASPNETCORE_ENVIRONMENT=Development</span> locally will try to use <span class="mono">sencecon</span>.</p>
+        </div>
+      </section>
+
+      <!-- 10 ................................................. -->
+      <section id="config">
+        <span class="eyebrow">10 &middot; Every knob</span>
+        <h2>Configuration reference</h2>
+
+        <h3>API &mdash; config keys</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Key</th><th>Local (<span class="mono">appsettings.Development.json</span>)</th><th>Production (Railway var)</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mono">ConnectionStrings:DefaultConnection</span></td><td><span class="mono">Host=localhost;&hellip;Database=sencecon_dev;Username=postgres;Password=postgres</span></td><td><span class="mono">ConnectionStrings__DefaultConnection</span> &rarr; <span class="mono">Host=postgres.railway.internal;&hellip;Database=railway;&hellip;</span> <span class="pill">password &mdash; set in Railway</span></td></tr>
+              <tr><td><span class="mono">Jwt:Issuer</span> / <span class="mono">:Audience</span></td><td><span class="mono">Sencecon.API</span> / <span class="mono">Sencecon.Client</span></td><td><span class="mono">Jwt__Issuer</span> / <span class="mono">Jwt__Audience</span></td></tr>
+              <tr><td><span class="mono">Jwt:Secret</span></td><td>dev-only placeholder</td><td><span class="mono">Jwt__Secret</span> <span class="pill">set in Railway</span></td></tr>
+              <tr><td><span class="mono">Jwt:ExpiryMinutes</span></td><td><span class="mono">120</span></td><td><span class="mono">Jwt__ExpiryMinutes</span></td></tr>
+              <tr><td><span class="mono">Cors:AllowedOrigins</span></td><td><span class="mono">http://localhost:5173</span>, <span class="mono">https://philmups15.github.io</span></td><td><span class="mono">Cors__AllowedOrigins__0..2</span></td></tr>
+              <tr><td><span class="mono">Resend:ApiKey</span> / <span class="mono">:FromAddress</span></td><td>empty / <span class="mono">Sencecon &lt;noreply@sencecon.dev&gt;</span></td><td>set if password-reset email is needed</td></tr>
+              <tr><td><span class="mono">Frontend:BaseUrl</span></td><td><span class="mono">http://localhost:5173</span></td><td>public frontend URL (used in reset links)</td></tr>
+              <tr><td><span class="mono">ASPNETCORE_ENVIRONMENT</span></td><td><span class="mono">Development</span></td><td><span class="mono">Production</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Nested keys use <span class="mono">__</span> as the separator in environment variables (<span class="mono">Jwt:Secret</span> &rarr; <span class="mono">Jwt__Secret</span>).</p>
+
+        <h3>Frontend &mdash; build-time env</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Var</th><th>Local</th><th>Railway</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mono">VITE_API_URL</span></td><td>unset &rarr; defaults to <span class="mono">http://localhost:5080</span></td><td><span class="mono">https://api-production-562a.up.railway.app</span></td></tr>
+              <tr><td><span class="mono">VITE_BASE_PATH</span></td><td>unset &rarr; <span class="mono">/sensecon-platform/</span> (GitHub Pages subpath)</td><td><span class="mono">/</span> (served at domain root)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Swagger</h3>
+        <p>Served in <strong>every</strong> environment, no authentication. UI at <span class="mono">/swagger</span>, spec at <span class="mono">/swagger/v1/swagger.json</span>. Live at <span class="mono">https://api-production-562a.up.railway.app/swagger</span>. Individual endpoints still require the bearer token &mdash; use the <em>Authorize</em> button.</p>
+      </section>
+
+      <!-- 11 ................................................. -->
+      <section id="gaps">
+        <span class="eyebrow">11 &middot; Honest edges</span>
+        <h2>Known gaps &amp; stubs</h2>
+        <p class="section-intro">What isn't wired, so nobody trusts a screen that is really a placeholder.</p>
+
+        <h3>Mock data still on screen</h3>
+        <ul>
+          <li><strong>Dashboard</strong> &mdash; entirely mock (KPIs, map pins, stage distribution, activity).</li>
+          <li><strong>Projects</strong> &mdash; milestones / tasks / subcontractors / risks / budget-line tabs are mock; the project core, surveys and plant panel are real.</li>
+          <li><strong>Surveys</strong> &mdash; photo-capture grid, measurements and obstructions panels are mock.</li>
+          <li><strong>Design</strong> &mdash; attachments and revision-history side panels are mock; the field tabs show static values.</li>
+          <li><strong>BOM</strong> &mdash; "Cost variance vs budget" chart is mock.</li>
+          <li><strong>Reports</strong> &mdash; the catalogue list is mock; generate / delete are real.</li>
+        </ul>
+
+        <h3>Model gaps</h3>
+        <ul>
+          <li><strong>No gated handover</strong> &mdash; no sign-off entity, acceptance date, or certificate; nothing blocks <span class="mono">Operating</span>.</li>
+          <li><strong>Commissioning</strong> &mdash; test list is hard-coded in the frontend, identical for every plant; only the latest result is kept.</li>
+          <li><strong>Non-conformities</strong> &mdash; full backend CRUD exists but there is <em>no screen</em>; they surface read-only inside Commissioning. The <span class="mono">PlantId</span> link can only be set via the API.</li>
+          <li><strong>Design / BOM &rarr; upstream</strong> &mdash; <span class="mono">Design.ProjectId</span> and <span class="mono">BomItem.PlantId</span> are real columns but the create forms are the only way to set them; there is no bulk backfill.</li>
+          <li><strong>Work orders</strong> &mdash; no checklist, parts, labour or attachment model; "sign off" only flips the status.</li>
+          <li><strong>Code generation</strong> &mdash; read-max-then-increment with no row lock; concurrent creates rely on the unique index to fail rather than duplicate.</li>
+        </ul>
+
+        <h3>Operational</h3>
+        <ul>
+          <li><strong>No CI</strong> &mdash; the backend repo has no workflows; the frontend's only workflow is the Pages deploy (push to <span class="mono">master</span>, not PRs).</li>
+          <li><strong>No push-to-deploy</strong> for the Railway app services &mdash; <span class="mono">railway up</span> from a local checkout is the deploy.</li>
+          <li><strong>Swagger spec</strong> once 500'd on <span class="mono">UsersController.UploadAvatar</span>; fixed by dropping the redundant <span class="mono">[FromForm]</span> and adding <span class="mono">[Consumes("multipart/form-data")]</span> &mdash; the pattern to copy for any future single-file upload action.</li>
+        </ul>
+      </section>
+
+      <footer>
+        Sencecon Platform Handbook &middot; reflects <span class="mono">main</span> / <span class="mono">master</span> as deployed &middot; generated from the working repositories and the live Railway project.
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  (function () {
+    // Mirror the rail nav into the mobile <details> menu.
+    var rail = document.getElementById('toc-list');
+    var mobile = document.getElementById('toc-mobile-nav');
+    if (rail && mobile) {
+      var clone = rail.cloneNode(true);
+      clone.id = 'toc-list-mobile';
+      mobile.appendChild(clone);
+      mobile.addEventListener('click', function (e) {
+        if (e.target.tagName === 'A') {
+          var d = mobile.closest('details');
+          if (d) d.open = false;
+        }
+      });
+    }
+
+    // Scroll-spy on the rail.
+    var links = Array.prototype.slice.call(document.querySelectorAll('#toc-rail a'));
+    var map = {};
+    links.forEach(function (a) {
+      var id = a.getAttribute('href').slice(1);
+      var sec = document.getElementById(id);
+      if (sec) map[id] = a;
+    });
+    var sections = Object.keys(map).map(function (id) { return document.getElementById(id); });
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            links.forEach(function (l) { l.classList.remove('active'); });
+            var a = map[entry.target.id];
+            if (a) a.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-12% 0px -80% 0px', threshold: 0 });
+      sections.forEach(function (s) { io.observe(s); });
+    }
+  })();
+</script>

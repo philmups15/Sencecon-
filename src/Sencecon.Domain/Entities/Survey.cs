@@ -19,4 +19,7 @@ public class Survey : BaseAuditableEntity
     public Plant? Plant { get; set; }
 
     public ICollection<Design> Designs { get; set; } = new List<Design>();
+    public ICollection<SurveyMeasurement> Measurements { get; set; } = new List<SurveyMeasurement>();
+    public ICollection<SurveyObstruction> Obstructions { get; set; } = new List<SurveyObstruction>();
+    public ICollection<SurveyPhoto> Photos { get; set; } = new List<SurveyPhoto>();
 }

@@ -33,7 +33,7 @@ public class CreateOpportunityCommandHandler : IRequestHandler<CreateOpportunity
         var currentUserId = _currentUserService.UserId
             ?? throw new UnauthorizedAccessException("No authenticated user.");
 
-        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context.Opportunities.Select(o => o.Code), "OPP-", cancellationToken);
+        var code = await EntityCodeGenerator.GenerateNextCodeAsync(_context, "OPP-", cancellationToken);
 
         var entity = new Opportunity
         {

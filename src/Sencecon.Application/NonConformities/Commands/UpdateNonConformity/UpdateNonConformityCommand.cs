@@ -9,7 +9,6 @@ namespace Sencecon.Application.NonConformities.Commands.UpdateNonConformity;
 public record UpdateNonConformityCommand : IRequest
 {
     public required Guid Id { get; init; }
-    public required string Code { get; init; }
     public required string Description { get; init; }
     public string PlantName { get; init; } = string.Empty;
     public NonConformityStatus Status { get; init; }
@@ -46,7 +45,6 @@ public class UpdateNonConformityCommandHandler : IRequestHandler<UpdateNonConfor
             }
         }
 
-        entity.Code = request.Code;
         entity.Description = request.Description;
         entity.PlantName = request.PlantName;
         entity.Status = request.Status;
