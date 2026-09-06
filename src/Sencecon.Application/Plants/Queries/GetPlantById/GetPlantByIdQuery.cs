@@ -44,6 +44,7 @@ public class GetPlantByIdQueryHandler : IRequestHandler<GetPlantByIdQuery, Plant
             Latitude = entity.Latitude,
             Longitude = entity.Longitude,
             Health = entity.Health,
+            IsActive = entity.IsActive,
             ProjectId = entity.ProjectId,
             ProjectName = entity.Project?.Name,
             Created = entity.Created

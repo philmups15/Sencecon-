@@ -15,6 +15,7 @@ public class Plant : BaseAuditableEntity
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public PlantHealth Health { get; set; } = PlantHealth.Unknown;
+    public bool IsActive { get; set; } = true;
 
     public Guid? ProjectId { get; set; }
     public Project? Project { get; set; }

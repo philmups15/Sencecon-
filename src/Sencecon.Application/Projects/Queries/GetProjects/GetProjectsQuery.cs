@@ -4,7 +4,10 @@ using Sencecon.Application.Common.Interfaces;
 
 namespace Sencecon.Application.Projects.Queries.GetProjects;
 
-public record GetProjectsQuery : IRequest<IReadOnlyList<ProjectDto>>;
+public record GetProjectsQuery : IRequest<IReadOnlyList<ProjectDto>>
+{
+    public bool IncludeInactive { get; init; }
+}
 
 public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IReadOnlyList<ProjectDto>>
 {
@@ -18,6 +21,7 @@ public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IReadOn
     public async Task<IReadOnlyList<ProjectDto>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
     {
         return await _context.Projects
+            .Where(p => request.IncludeInactive || p.IsActive)
             .OrderBy(p => p.Code)
             .Select(p => new ProjectDto
             {
@@ -29,6 +33,9 @@ public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IReadOn
                 ProjectManager = p.ProjectManager,
                 Budget = p.Budget,
                 Actual = p.Actual,
+                IsActive = p.IsActive,
+                ScheduledStartDate = p.ScheduledStartDate,
+                ScheduledEndDate = p.ScheduledEndDate,
                 Created = p.Created
             })
             .ToListAsync(cancellationToken);
