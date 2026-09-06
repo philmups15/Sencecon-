@@ -33,7 +33,12 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext, IDataProte
     public DbSet<OpportunityNote> OpportunityNotes => Set<OpportunityNote>();
     public DbSet<OpportunityActivity> OpportunityActivities => Set<OpportunityActivity>();
     public DbSet<Survey> Surveys => Set<Survey>();
+    public DbSet<SurveyMeasurement> SurveyMeasurements => Set<SurveyMeasurement>();
+    public DbSet<SurveyObstruction> SurveyObstructions => Set<SurveyObstruction>();
+    public DbSet<SurveyPhoto> SurveyPhotos => Set<SurveyPhoto>();
     public DbSet<Design> Designs => Set<Design>();
+    public DbSet<DesignAttachment> DesignAttachments => Set<DesignAttachment>();
+    public DbSet<DesignRevision> DesignRevisions => Set<DesignRevision>();
     public DbSet<BomItem> BomItems => Set<BomItem>();
     public DbSet<NonConformity> NonConformities => Set<NonConformity>();
     public DbSet<Report> Reports => Set<Report>();

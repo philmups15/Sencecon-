@@ -25,7 +25,12 @@ public interface IApplicationDbContext
     DbSet<OpportunityNote> OpportunityNotes { get; }
     DbSet<OpportunityActivity> OpportunityActivities { get; }
     DbSet<Survey> Surveys { get; }
+    DbSet<SurveyMeasurement> SurveyMeasurements { get; }
+    DbSet<SurveyObstruction> SurveyObstructions { get; }
+    DbSet<SurveyPhoto> SurveyPhotos { get; }
     DbSet<Design> Designs { get; }
+    DbSet<DesignAttachment> DesignAttachments { get; }
+    DbSet<DesignRevision> DesignRevisions { get; }
     DbSet<BomItem> BomItems { get; }
     DbSet<NonConformity> NonConformities { get; }
     DbSet<Report> Reports { get; }
